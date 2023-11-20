@@ -14,5 +14,10 @@ module.exports = (app) => {
         app.put("/api/v1/track/updateTrack/:id", upload.single('image'), [authJwt.verifyToken], auth.updateTrack);
         app.delete("/api/v1/track/removeTrack/:id", [authJwt.verifyToken], auth.removeTrack)
         app.post("/api/v1/speed/createSpeed", [authJwt.verifyToken], auth.createSpeed);
+        app.get("/api/v1/speed/getSpeed", auth.getSpeed);
+        app.put("/api/v1/speed/updateSpeed/:id", [authJwt.verifyToken], auth.updateSpeed);
         app.delete("/api/v1/speed/removeSpeed/:id", [authJwt.verifyToken], auth.removeSpeed)
+
+        // app.post("/api/v1/speed/createSpeedForAll", auth.createSpeedForAll);
+
 }

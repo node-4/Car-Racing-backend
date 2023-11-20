@@ -1,6 +1,10 @@
 const jwt = require("jsonwebtoken");
 const randomatic = require("randomatic");
 const User = require("../model/userModel");
+const Car = require("../model/car");
+const Track = require("../model/track");
+const Speed = require("../model/speed");
+const Race = require("../model/race");
 exports.socialLogin = async (req, res) => {
         try {
                 let userData = await User.findOne({ $or: [{ mobileNumber: req.body.mobileNumber }, { socialId: req.body.socialId }, { socialType: req.body.socialType }] });
@@ -100,6 +104,119 @@ exports.getUserDetails = async (req, res) => {
                 return res.status(500).json({ message: "Server error" });
         }
 };
+exports.updateUserDetails = async (req, res) => {
+        try {
+                const user = await User.findById(req.user._id);
+                if (!user) {
+                        return res.status(404).send({ status: 404, message: "user not found ", data: {}, });
+                } else {
+                        const { fullName, firstName, lastName, email, mobileNumber, address, city, state, country, pincode } = req.body;
+                        uswe.fullName = fullName || user.fullName;
+                        user.firstName = firstName || user.firstName;
+                        user.lastName = lastName || user.lastName;
+                        user.email = email || user.email;
+                        user.mobileNumber = mobileNumber || user.mobileNumber;
+                        user.address = address || user.address;
+                        user.city = city || user.city;
+                        user.state = state || user.state;
+                        user.country = country || user.country;
+                        user.pincode = pincode || user.pincode;
+                        await user.save();
+                        return res.status(200).send({ status: 200, message: "Profile updated successfully", data: user, });
+                }
+        } catch (error) {
+                console.error(error);
+                return res.status(500).json({ message: "Server error" });
+        }
+};
+exports.createRace = async (req, res) => {
+        try {
+                let car1, car2, car3, speed1track1Id, speed1track2Id, speed1track3Id, speed2track1Id, speed2track2Id, speed2track3Id, speed3track1Id, speed3track2Id, speed3track3Id;
+                let findOne = await Race.findOne({ pending: 'pending' }).populate([
+                        { path: 'car1.car', select: 'name image victory  odds' },
+                        { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                        { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                        { path: 'car1.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                        { path: 'car2.car', select: 'name image victory  odds' },
+                        { path: 'car2.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                        { path: 'car2.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                        { path: 'car2.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                        { path: 'car3.car', select: 'name image victory  odds' },
+                        { path: 'car3.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                        { path: 'car3.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                        { path: 'car3.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                ]);
+                if (findOne) {
+                        return res.status(200).send({ status: 200, message: "race find successfully.", data: findOne, });
+                } else {
+                        const cars = await Car.aggregate([{ $sample: { size: 3 } }]);
+                        if (cars.length > 0) {
+                                for (let i = 0; i < cars.length; i++) {
+                                        console.log(cars[i]._id);
+                                        car1 = cars[0]._id;
+                                        car2 = cars[1]._id;
+                                        car3 = cars[2]._id;
+                                        const speed = await Speed.aggregate([{ $match: { carId: cars[i]._id } }, { $sample: { size: 3 } },]);
+                                        for (let j = 0; j < speed.length; j++) {
+                                                if (i == 0) {
+                                                        speed1track1Id = speed[0]._id;
+                                                        speed1track2Id = speed[1]._id;
+                                                        speed1track3Id = speed[2]._id;
+                                                } else if (i == 1) {
+                                                        speed2track1Id = speed[0]._id;
+                                                        speed2track2Id = speed[1]._id;
+                                                        speed2track3Id = speed[2]._id;
+                                                } else if (i == 2) {
+                                                        speed3track1Id = speed[0]._id;
+                                                        speed3track2Id = speed[1]._id;
+                                                        speed3track3Id = speed[2]._id;
+                                                }
+                                        }
+                                }
+                        }
+                        req.body.raceId = await reffralCode();
+                        req.body.car1 = {
+                                car: car1,
+                                track1Id: speed1track1Id,
+                                track2Id: speed1track2Id,
+                                track3Id: speed1track3Id,
+                        };
+                        req.body.car2 = {
+                                car: car2,
+                                track1Id: speed2track1Id,
+                                track2Id: speed2track2Id,
+                                track3Id: speed2track3Id,
+                        };
+                        req.body.car3 = {
+                                car: car3,
+                                track1Id: speed3track1Id,
+                                track2Id: speed3track2Id,
+                                track3Id: speed3track3Id,
+                        };
+                        const car = await Race.create(req.body);
+                        let car6 = await Race.findOne({ _id: car._id }).populate([
+                                { path: 'car1.car', select: 'name image victory  odds' },
+                                { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                { path: 'car1.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                { path: 'car2.car', select: 'name image victory  odds' },
+                                { path: 'car2.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                { path: 'car2.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                { path: 'car2.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                { path: 'car3.car', select: 'name image victory  odds' },
+                                { path: 'car3.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                { path: 'car3.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                { path: 'car3.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                        ]);
+                        if (car6) {
+                                return res.status(200).send({ status: 200, message: "race find successfully.", data: car6, });
+                        }
+                }
+        } catch (error) {
+                console.error("Error creating race:", error);
+        }
+};
+
 const reffralCode = async () => {
         var digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         let OTP = '';

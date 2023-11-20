@@ -2,32 +2,87 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 var userSchema = new schema(
         {
-                car1Id: {
-                        type: schema.Types.ObjectId,
-                        ref: "car"
+                raceId: {
+                        type: String,
                 },
-                car2Id: {
-                        type: schema.Types.ObjectId,
-                        ref: "car"
+                car1: {
+                        car: {
+                                type: schema.Types.ObjectId,
+                                ref: "car"
+                        },
+                        track1Id: {
+                                type: schema.Types.ObjectId,
+                                ref: "speed"
+                        },
+                        track2Id: {
+                                type: schema.Types.ObjectId,
+                                ref: "speed"
+                        },
+                        track3Id: {
+                                type: schema.Types.ObjectId,
+                                ref: "speed"
+                        },
                 },
-                car3Id: {
-                        type: schema.Types.ObjectId,
-                        ref: "car"
+                car2: {
+                        car: {
+                                type: schema.Types.ObjectId,
+                                ref: "car"
+                        },
+                        track1Id: {
+                                type: schema.Types.ObjectId,
+                                ref: "speed"
+                        },
+                        track2Id: {
+                                type: schema.Types.ObjectId,
+                                ref: "speed"
+                        },
+                        track3Id: {
+                                type: schema.Types.ObjectId,
+                                ref: "speed"
+                        },
                 },
-                track1Id: {
-                        type: schema.Types.ObjectId,
-                        ref: "track"
-                },
-                track2Id: {
-                        type: schema.Types.ObjectId,
-                        ref: "track"
-                },
-                track3Id: {
-                        type: schema.Types.ObjectId,
-                        ref: "track"
+                car3: {
+                        car: {
+                                type: schema.Types.ObjectId,
+                                ref: "car"
+                        },
+                        track1Id: {
+                                type: schema.Types.ObjectId,
+                                ref: "speed"
+                        },
+                        track2Id: {
+                                type: schema.Types.ObjectId,
+                                ref: "speed"
+                        },
+                        track3Id: {
+                                type: schema.Types.ObjectId,
+                                ref: "speed"
+                        },
                 },
                 noOfuser: {
                         type: Number,
+                        default: 0
+                },
+                betsAmount: {
+                        type: Number,
+                        default: 0
+                },
+                car1BetAmount: {
+                        type: Number,
+                        default: 0
+                },
+                car2BetAmount: {
+                        type: Number,
+                        default: 0
+                },
+                car3BetAmount: {
+                        type: Number,
+                        default: 0
+                },
+                status: {
+                        type: String,
+                        enum: ["pending", "started", "completed"],
+                        default: "pending"
                 },
         },
         { timestamps: true }

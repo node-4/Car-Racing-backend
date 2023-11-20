@@ -107,7 +107,7 @@ exports.updateCar = async (req, res) => {
                 car.name = req.body.name;
                 car.odds = req.body.odds;
                 car.victory = req.body.victory;
-                let update = await Car.save();
+                let update = await car.save();
                 return res.status(200).json({ message: "Updated Successfully", status: 200, data: update });
         } catch (error) {
                 return res.status(500).json({ status: 500, message: "internal server error ", data: error.message, });
@@ -167,7 +167,7 @@ exports.updateTrack = async (req, res) => {
                         track.image = track.image;
                 }
                 track.name = req.body.name;
-                let update = await Track.save();
+                let update = await track.save();
                 return res.status(200).json({ message: "Updated Successfully", status: 200, data: update });
         } catch (error) {
                 return res.status(500).json({ status: 500, message: "internal server error ", data: error.message, });
@@ -211,11 +211,51 @@ exports.createSpeed = async (req, res) => {
 };
 exports.getSpeed = async (req, res) => {
         try {
-                const findSpeed = await Speed.find({});
-                if (findSpeed.length == 0) {
-                        return res.status(404).send({ status: 404, message: "Speed not found ", data: {}, });
+                const { carId, trackId } = req.query;
+                const filter = {};
+                if (carId) {
+                        filter.carId = carId;
                 }
-                return res.status(200).send({ status: 200, message: "Speed  found ", data: Speed });
+                if (trackId) {
+                        filter.trackId = trackId;
+                }
+                const findSpeed = await Speed.find(filter).populate("carId").populate("trackId");
+                if (findSpeed.length === 0) {
+                        return res.status(404).send({ status: 404, message: "Speed not found", data: {} });
+                }
+                return res.status(200).send({ status: 200, message: "Speed found", data: findSpeed });
+        } catch (error) {
+                return res.status(500).json({ status: 500, message: "Internal server error", data: error.message });
+        }
+};
+exports.updateSpeed = async (req, res) => {
+        try {
+                const { carId, trackId, speed } = req.body;
+                const track = await Speed.findById({ _id: req.params.id });
+                if (!track) {
+                        return res.status(404).json({ message: "Track Not Found", status: 404, data: {} });
+                }
+                if (carId != (null || undefined || "")) {
+                        const car = await Car.findById(carId);
+                        if (!car) {
+                                return res.status(404).send({ status: 404, message: "car not found ", data: {}, });
+                        }
+                }
+                if (trackId != (null || undefined || "")) {
+                        const track1 = await Track.findById(trackId);
+                        if (!track1) {
+                                return res.status(404).send({ status: 404, message: "track not found ", data: {}, });
+                        }
+                }
+                const findSpeed = await Speed.findOne({ _id: { $ne: track._id }, carId: carId || track.carId, trackId: trackId || track.trackId });
+                if (findSpeed) {
+                        return res.status(409).send({ status: 409, message: "Speed already exit with this car and track id ", data: {}, });
+                }
+                track.speed = speed || track.speed;
+                track.carId = carId || track.carId;
+                track.trackId = trackId || track.trackId;
+                let update = await track.save();
+                return res.status(200).json({ message: "Updated Successfully", status: 200, data: update });
         } catch (error) {
                 return res.status(500).json({ status: 500, message: "internal server error ", data: error.message, });
         }
@@ -234,3 +274,29 @@ exports.removeSpeed = async (req, res) => {
                 return res.status(500).json({ status: 500, message: "internal server error ", data: error.message, });
         }
 };
+
+// exports.createSpeedForAll = async (req, res) => {
+//         try {
+//                 const minSpeed = 50;
+//                 const maxSpeed = 200;
+//                 const cars = await Car.find();
+//                 const tracks = await Track.find();
+//                 for (const car of cars) {
+//                         for (const track of tracks) {
+//                                 const findSpeed = await Speed.findOne({ carId: car._id, trackId: track._id });
+//                                 const speed = Math.floor(Math.random() * (maxSpeed - minSpeed + 1)) + minSpeed;
+//                                 if (findSpeed) {
+//                                         findSpeed.speed = speed;
+//                                         await findSpeed.save();
+//                                 } else {
+//                                         const newSpeed = new Speed({ carId: car._id, trackId: track._id, speed });
+//                                         await newSpeed.save();
+//                                 }
+//                         }
+//                 }
+
+//                 return res.status(200).json({ message: "Random speed entries added/updated successfully.", status: 200 });
+//         } catch (error) {
+//                 return res.status(500).json({ status: 500, message: "Internal server error", data: error.message });
+//         }
+// };
