@@ -9,4 +9,12 @@ module.exports = (app) => {
         app.get("/api/v1/user/me", authJwt.verifyToken, auth.getUserDetails)
         app.put("/api/v1/user/me", authJwt.verifyToken, auth.updateUserDetails)
         app.post("/api/v1/user/createRace", authJwt.verifyToken, auth.createRace)
+        app.get("/api/v1/race/getRace", auth.getRace);
+        app.post("/api/v1/bet/bets", authJwt.verifyToken, auth.addBets);
+        app.get("/api/v1/user/thisWeek", authJwt.verifyToken, auth.thisWeek)
+        app.get("/api/v1/user/lastWeek", authJwt.verifyToken, auth.lastWeek)
+        app.post("/api/v1/bet/updatewinningbet", authJwt.verifyToken, auth.updatewinningbet);
+        app.get("/api/carwiseWinners/:date", auth.carwisewinningamountondate);
+        app.get("/api/carwisewinningamountondatebyToken/:date", authJwt.verifyToken, auth.carwisewinningamountondatebyToken);
+        app.get("/api/carondate", auth.carondate);
 }
