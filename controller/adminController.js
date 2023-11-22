@@ -3,8 +3,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Car = require("../model/car");
 const Track = require("../model/track");
-const Speed = require("../model/speed");
-
+const Speed = require("../model/speed")
+const Race = require("../model/race");
+const Bet = require("../model/bets");
 exports.registration = async (req, res) => {
         const { phone, email } = req.body;
         try {
@@ -274,7 +275,32 @@ exports.removeSpeed = async (req, res) => {
                 return res.status(500).json({ status: 500, message: "internal server error ", data: error.message, });
         }
 };
-
+exports.getRace = async (req, res) => {
+        try {
+                let findSpeed = await Race.find({}).populate([{ path: 'car1.car', select: 'name image victory  odds' }, { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.car', select: 'name image victory  odds' }, { path: 'car2.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.car', select: 'name image victory  odds' }, { path: 'car3.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },]); if (findSpeed.length === 0) {
+                        return res.status(404).send({ status: 404, message: "Speed not found", data: {} });
+                }
+                return res.status(200).send({ status: 200, message: "Speed found", data: findSpeed });
+        } catch (error) {
+                return res.status(500).json({ status: 500, message: "Internal server error", data: error.message });
+        }
+};
+exports.getBet = async (req, res) => {
+        try {
+                let findSpeed = await Bet.find({}).populate([
+                        { path: 'car1Id', select: 'name image victory  odds' },
+                        { path: 'car2Id', select: 'name image victory  odds' },
+                        { path: 'car3Id', select: 'name image victory  odds' },
+                        { path: 'raceId', select: 'raceId', populate: [{ path: 'car1.car', select: 'name image victory  odds' }, { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.car', select: 'name image victory  odds' }, { path: 'car2.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.car', select: 'name image victory  odds' }, { path: 'car3.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },] },
+                        { path: 'userId', select: 'fullName firstName lastName image ' },
+                ]); if (findSpeed.length === 0) {
+                        return res.status(404).send({ status: 404, message: "Bets not found", data: {} });
+                }
+                return res.status(200).send({ status: 200, message: "Bets found", data: findSpeed });
+        } catch (error) {
+                return res.status(500).json({ status: 500, message: "Internal server error", data: error.message });
+        }
+};
 // exports.createSpeedForAll = async (req, res) => {
 //         try {
 //                 const minSpeed = 50;

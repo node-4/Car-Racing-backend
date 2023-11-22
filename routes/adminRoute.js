@@ -17,7 +17,8 @@ module.exports = (app) => {
         app.get("/api/v1/speed/getSpeed", auth.getSpeed);
         app.put("/api/v1/speed/updateSpeed/:id", [authJwt.verifyToken], auth.updateSpeed);
         app.delete("/api/v1/speed/removeSpeed/:id", [authJwt.verifyToken], auth.removeSpeed)
-
+        app.get("/api/v1/admin/getRace", auth.getRace);
+        app.get("/api/v1/admin/getBet", auth.getBet);
         // app.post("/api/v1/speed/createSpeedForAll", auth.createSpeedForAll);
 
 }

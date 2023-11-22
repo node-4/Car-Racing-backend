@@ -134,7 +134,7 @@ exports.updateUserDetails = async (req, res) => {
 exports.createRace = async (req, res) => {
         try {
                 let car1, car2, car3, speed1track1Id, speed1track2Id, speed1track3Id, speed2track1Id, speed2track2Id, speed2track3Id, speed3track1Id, speed3track2Id, speed3track3Id;
-                let findOne = await Race.findOne({ pending: 'pending' }).populate([
+                let findOne = await Race.findOne({ status: 'pending' }).populate([
                         { path: 'car1.car', select: 'name image victory  odds' },
                         { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
                         { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -228,6 +228,34 @@ exports.getRace = async (req, res) => {
                 return res.status(500).json({ status: 500, message: "Internal server error", data: error.message });
         }
 };
+exports.raceStart = async (req, res) => {
+        try {
+                const user = await Race.findById({ _id: req.params.id });
+                if (!user) {
+                        return res.status(404).send({ status: 404, message: "Race  not found ", data: {}, });
+                } else {
+                        let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "Started" }, { new: true })
+                        return res.status(200).send({ status: 200, message: "Race start", data: update, });
+                }
+        } catch (error) {
+                console.error(error);
+                return res.status(500).json({ message: "Server error" });
+        }
+};
+exports.raceCompleted = async (req, res) => {
+        try {
+                const user = await Race.findById({ _id: req.params.id });
+                if (!user) {
+                        return res.status(404).send({ status: 404, message: "Race  not found ", data: {}, });
+                } else {
+                        let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
+                        return res.status(200).send({ status: 200, message: "Race complete", data: update, });
+                }
+        } catch (error) {
+                console.error(error);
+                return res.status(500).json({ message: "Server error" });
+        }
+};
 exports.addBets = async (req, res) => {
         try {
                 let { raceId, carId, selectedCar, betAmount } = req.body;
@@ -284,6 +312,17 @@ exports.addBets = async (req, res) => {
         } catch (error) {
                 console.error(error);
                 return res.status(500).json({ status: 500, message: 'Internal server error', data: error.message });
+        }
+};
+exports.getBet = async (req, res) => {
+        try {
+                let findSpeed = await Bet.find({ userId: req.user._id, raceId: req.params.raceId });
+                if (findSpeed.length === 0) {
+                        return res.status(404).send({ status: 404, message: "Bets not found", data: {} });
+                }
+                return res.status(200).send({ status: 200, message: "Bets found", data: findSpeed });
+        } catch (error) {
+                return res.status(500).json({ status: 500, message: "Internal server error", data: error.message });
         }
 };
 exports.thisWeek = async (req, res) => {
@@ -569,6 +608,7 @@ exports.carondate = async (req, res) => {
                 res.status(500).json({ error: "Internal Server Error" });
         }
 };
+
 const reffralCode = async () => {
         var digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         let OTP = '';

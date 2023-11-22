@@ -10,6 +10,8 @@ module.exports = (app) => {
         app.put("/api/v1/user/me", authJwt.verifyToken, auth.updateUserDetails)
         app.post("/api/v1/user/createRace", authJwt.verifyToken, auth.createRace)
         app.get("/api/v1/race/getRace", auth.getRace);
+        app.put("/api/v1/race/raceStart/:id", auth.raceStart);
+        app.put("/api/v1/race/raceCompleted/:id", auth.raceCompleted);
         app.post("/api/v1/bet/bets", authJwt.verifyToken, auth.addBets);
         app.get("/api/v1/user/thisWeek", authJwt.verifyToken, auth.thisWeek)
         app.get("/api/v1/user/lastWeek", authJwt.verifyToken, auth.lastWeek)
@@ -17,4 +19,5 @@ module.exports = (app) => {
         app.get("/api/carwiseWinners/:date", auth.carwisewinningamountondate);
         app.get("/api/carwisewinningamountondatebyToken/:date", authJwt.verifyToken, auth.carwisewinningamountondatebyToken);
         app.get("/api/carondate", auth.carondate);
+        app.get("/api/v1/Bet/getBet/:raceId", authJwt.verifyToken, auth.getBet);
 }
