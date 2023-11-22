@@ -5,6 +5,9 @@ var userSchema = new schema(
                 raceId: {
                         type: String,
                 },
+                raceNo: {
+                        type: Number,
+                },
                 car1: {
                         car: {
                                 type: schema.Types.ObjectId,
@@ -78,6 +81,22 @@ var userSchema = new schema(
                 car3BetAmount: {
                         type: Number,
                         default: 0
+                },
+                maximum: {
+                        type: String,
+                        enum: ["I", "II", "III"]
+                },
+                medium: {
+                        type: String,
+                        enum: ["I", "II", "III"]
+                },
+                lowest: {
+                        type: String,
+                        enum: ["I", "II", "III"]
+                },
+                win: {
+                        type: String,
+                        enum: ["max", "med", "low"]
                 },
                 status: {
                         type: String,
