@@ -218,6 +218,19 @@ exports.createRace = async (req, res) => {
                 console.error("Error creating race:", error);
         }
 };
+exports.getRaceByid = async (req, res) => {
+        try {
+                const user = await Race.findById({ _id: req.params.id }).select('noOfuser betsAmount car1BetAmount car2BetAmount car3BetAmount');
+                if (!user) {
+                        return res.status(404).send({ status: 404, message: "Race  not found ", data: {}, });
+                } else {
+                        return res.status(200).send({ status: 200, message: "Race start", data: update, });
+                }
+        } catch (error) {
+                console.error(error);
+                return res.status(500).json({ message: "Server error" });
+        }
+};
 exports.getRace = async (req, res) => {
         try {
                 let findSpeed = await Race.find({}).populate([{ path: 'car1.car', select: 'name image victory  odds' }, { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.car', select: 'name image victory  odds' }, { path: 'car2.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.car', select: 'name image victory  odds' }, { path: 'car3.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },]); if (findSpeed.length === 0) {

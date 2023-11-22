@@ -10,6 +10,7 @@ module.exports = (app) => {
         app.put("/api/v1/user/me", authJwt.verifyToken, auth.updateUserDetails)
         app.post("/api/v1/user/createRace", authJwt.verifyToken, auth.createRace)
         app.get("/api/v1/race/getRace", auth.getRace);
+        app.get("/api/v1/race/getRaceByid/:id", auth.getRaceByid);
         app.put("/api/v1/race/raceStart/:id", auth.raceStart);
         app.put("/api/v1/race/raceCompleted/:id", auth.raceCompleted);
         app.post("/api/v1/bet/bets", authJwt.verifyToken, auth.addBets);
