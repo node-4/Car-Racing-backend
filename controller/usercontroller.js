@@ -224,7 +224,7 @@ exports.getRaceByid = async (req, res) => {
                 if (!user) {
                         return res.status(404).send({ status: 404, message: "Race  not found ", data: {}, });
                 } else {
-                        return res.status(200).send({ status: 200, message: "Race start", data: update, });
+                        return res.status(200).send({ status: 200, message: "Race start", data: user, });
                 }
         } catch (error) {
                 console.error(error);
