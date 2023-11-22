@@ -59,13 +59,15 @@ exports.loginUser = async (req, res) => {
                         let refferalCode = await reffralCode();
                         user = new User({ mobileNumber, otp, refferalCode });
                         await user.save();
-                        return res.status(200).send({ status: 200, message: "OTP generated and sent to the user.", data: user, });
+                        const token = jwt.sign({ id: user._id }, "node5flyweis");
+                        return res.status(200).send({ status: 200, message: "OTP generated and sent to the user.", data: { user, token }, });
                 } else {
                         const otp = randomatic("0", 4);
                         user.otp = otp;
                         user.isVerified = false;
                         await user.save();
-                        return res.status(200).send({ status: 200, message: "OTP generated and sent to the user.", data: user, });
+                        const token = jwt.sign({ id: user._id }, "node5flyweis");
+                        return res.status(200).send({ status: 200, message: "OTP generated and sent to the user.", data: { user, token }, });
                 }
         } catch (error) {
                 return res.status(500).send({ status: 500, message: "Server error" + error.message });
