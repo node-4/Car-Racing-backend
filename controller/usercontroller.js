@@ -1114,7 +1114,7 @@ exports.addBets = async (req, res) => {
                         newBet = new Bet(obj);
                         await newBet.save();
                         race = await Race.findOneAndUpdate(
-                                { _id: raceId, status: 'pending' },
+                                { _id: raceId },
                                 {
                                         $inc: {
                                                 noOfuser: 1,
