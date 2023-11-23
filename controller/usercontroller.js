@@ -942,7 +942,7 @@ exports.raceStart = async (req, res) => {
                 return res.status(500).json({ message: "Server error" });
         }
 };
-exports.raceCompleted = async (req, res) => {
+exports.raceCompleted1 = async (req, res) => {
         try {
                 const user = await Race.findById({ _id: req.params.id });
                 if (!user) {
@@ -950,6 +950,139 @@ exports.raceCompleted = async (req, res) => {
                 } else {
                         let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
                         return res.status(200).send({ status: 200, message: "Race complete", data: update, });
+                }
+        } catch (error) {
+                console.error(error);
+                return res.status(500).json({ message: "Server error" });
+        }
+};
+exports.raceCompleted = async (req, res) => {
+        try {
+                const user = await Race.findById({ _id: req.params.id });
+                if (!user) {
+                        return res.status(404).send({ status: 404, message: "Race  not found ", data: {}, });
+                } else {
+                        let findBet = await Bet.find({ raceId: user._id, userId: req.user._id }).populate([{ path: 'car1Id', select: 'name image victory  odds' }, { path: 'car2Id', select: 'name image victory  odds' }, { path: 'car3Id', select: 'name image victory  odds' },]);
+                        if (user.win == "max") {
+                                let winningCar = user.maximum
+                                for (let i = 0; i < findBet.length; i++) {
+                                        if (findBet[i].betOn == "I") {
+                                                if (findBet[i].betOn == winningCar) {
+                                                        findBet[i].status = "win";
+                                                        findBet[i].winAmount = findBet[i].betAmount * findBet[i].car1Id.odds;
+                                                        findBet[i].save();
+                                                } else {
+                                                        findBet[i].status = "loss";
+                                                        findBet[i].winAmount = 0;
+                                                        findBet[i].save();
+                                                }
+                                        }
+                                        else if (findBet[i].betOn == "II") {
+                                                if (findBet[i].betOn == winningCar) {
+                                                        findBet[i].status = "win";
+                                                        findBet[i].winAmount = findBet[i].betAmount * findBet[i].car2Id.odds;
+                                                        findBet[i].save();
+                                                } else {
+                                                        findBet[i].status = "loss";
+                                                        findBet[i].winAmount = 0;
+                                                        findBet[i].save();
+                                                }
+                                        } else {
+                                                if (findBet[i].betOn == winningCar) {
+                                                        findBet[i].status = "win";
+                                                        findBet[i].winAmount = findBet[i].betAmount * findBet[i].car3Id.odds;
+                                                        findBet[i].save();
+                                                } else {
+                                                        findBet[i].status = "loss";
+                                                        findBet[i].winAmount = 0;
+                                                        findBet[i].save();
+                                                }
+                                        }
+                                        console.log(findBet[i]);
+                                }
+                                let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
+                                return res.status(200).send({ status: 200, message: "Race complete", data: update, });
+                        }
+                        if (user.win == "med") {
+                                let winningCar = user.medium
+                                for (let i = 0; i < findBet.length; i++) {
+                                        if (findBet[i].betOn == "I") {
+                                                if (findBet[i].betOn == winningCar) {
+                                                        findBet[i].status = "win";
+                                                        findBet[i].winAmount = findBet[i].betAmount * findBet[i].car1Id.odds;
+                                                        findBet[i].save();
+                                                } else {
+                                                        findBet[i].status = "loss";
+                                                        findBet[i].winAmount = 0;
+                                                        findBet[i].save();
+                                                }
+                                        }
+                                        else if (findBet[i].betOn == "II") {
+                                                if (findBet[i].betOn == winningCar) {
+                                                        findBet[i].status = "win";
+                                                        findBet[i].winAmount = findBet[i].betAmount * findBet[i].car2Id.odds;
+                                                        findBet[i].save();
+                                                } else {
+                                                        findBet[i].status = "loss";
+                                                        findBet[i].winAmount = 0;
+                                                        findBet[i].save();
+                                                }
+                                        } else {
+                                                if (findBet[i].betOn == winningCar) {
+                                                        findBet[i].status = "win";
+                                                        findBet[i].winAmount = findBet[i].betAmount * findBet[i].car3Id.odds;
+                                                        findBet[i].save();
+                                                } else {
+                                                        findBet[i].status = "loss";
+                                                        findBet[i].winAmount = 0;
+                                                        findBet[i].save();
+                                                }
+                                        }
+                                        console.log(findBet[i]);
+                                }
+                                let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
+                                return res.status(200).send({ status: 200, message: "Race complete", data: update, });
+                        }
+                        if (user.win == "low") {
+                                let winningCar = user.lowest
+                                for (let i = 0; i < findBet.length; i++) {
+                                        if (findBet[i].betOn == "I") {
+                                                if (findBet[i].betOn == winningCar) {
+                                                        findBet[i].status = "win";
+                                                        findBet[i].winAmount = findBet[i].betAmount * findBet[i].car1Id.odds;
+                                                        findBet[i].save();
+                                                } else {
+                                                        findBet[i].status = "loss";
+                                                        findBet[i].winAmount = 0;
+                                                        findBet[i].save();
+                                                }
+                                        }
+                                        else if (findBet[i].betOn == "II") {
+                                                if (findBet[i].betOn == winningCar) {
+                                                        findBet[i].status = "win";
+                                                        findBet[i].winAmount = findBet[i].betAmount * findBet[i].car2Id.odds;
+                                                        findBet[i].save();
+                                                } else {
+                                                        findBet[i].status = "loss";
+                                                        findBet[i].winAmount = 0;
+                                                        findBet[i].save();
+                                                }
+                                        } else {
+                                                if (findBet[i].betOn == winningCar) {
+                                                        findBet[i].status = "win";
+                                                        findBet[i].winAmount = findBet[i].betAmount * findBet[i].car3Id.odds;
+                                                        findBet[i].save();
+                                                } else {
+                                                        findBet[i].status = "loss";
+                                                        findBet[i].winAmount = 0;
+                                                        findBet[i].save();
+                                                }
+                                        }
+                                }
+                                let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
+                                return res.status(200).send({ status: 200, message: "Race complete", data: update, });
+                        }
+
                 }
         } catch (error) {
                 console.error(error);

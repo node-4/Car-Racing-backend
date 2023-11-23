@@ -12,7 +12,7 @@ module.exports = (app) => {
         app.get("/api/v1/race/getRace", auth.getRace);
         app.get("/api/v1/race/getRaceByid/:id", auth.getRaceByid);
         app.put("/api/v1/race/raceStart/:id", auth.raceStart);
-        app.put("/api/v1/race/raceCompleted/:id", auth.raceCompleted);
+        app.put("/api/v1/race/raceCompleted/:id", authJwt.verifyToken, auth.raceCompleted);
         app.post("/api/v1/bet/bets", authJwt.verifyToken, auth.addBets);
         app.get("/api/v1/user/thisWeek", authJwt.verifyToken, auth.thisWeek)
         app.get("/api/v1/user/lastWeek", authJwt.verifyToken, auth.lastWeek)
