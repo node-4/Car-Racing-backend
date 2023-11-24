@@ -341,6 +341,7 @@ exports.raceStart = async (req, res) => {
                                         const index = amounts.indexOf(amount);
                                         return ["I", "II", "III"][index];
                                 }
+                                console.log(user.raceNo);
                                 if (user.raceNo == 10) {
                                         if (minBetAmount === user.car1BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car1.car }).sort({ speed: -1 }).limit(2);
@@ -533,7 +534,7 @@ exports.raceStart = async (req, res) => {
                                                 return res.status(200).send({ status: 200, message: "car 1", data: findOne1 });
                                         }
                                 }
-                                if (user.raceNo == (1 || 3 || 5 || 7 || 8 || 9)) {
+                                if ((user.raceNo == 1) || (user.raceNo == 3) || (user.raceNo == 5) || (user.raceNo == 7) || (user.raceNo == 8) || (user.raceNo == 9)) {
                                         if (maxBetAmount === user.car1BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car1.car }).sort({ speed: -1 }).limit(2);
                                                 speed1track2Id = speed2[0]._id;
@@ -725,7 +726,7 @@ exports.raceStart = async (req, res) => {
                                                 return res.status(200).send({ status: 200, message: "car 1", data: findOne1 });
                                         }
                                 }
-                                if (user.raceNo == (2 || 4 || 6)) {
+                                if ((user.raceNo == 2) || (user.raceNo == 4) || (user.raceNo == 6)) {
                                         if (mediumBetAmount === user.car1BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car1.car }).sort({ speed: -1 }).limit(2);
                                                 speed1track2Id = speed2[0]._id;
