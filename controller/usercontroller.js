@@ -134,93 +134,6 @@ exports.updateUserDetails = async (req, res) => {
 };
 exports.createRace1 = async (req, res) => {
         try {
-                let car1, car2, car3, speed1track1Id, speed1track2Id, speed1track3Id, speed2track1Id, speed2track2Id, speed2track3Id, speed3track1Id, speed3track2Id, speed3track3Id;
-                let findOne = await Race.findOne({ status: 'pending' }).populate([
-                        { path: 'car1.car', select: 'name image victory  odds' },
-                        { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                        { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                        { path: 'car1.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                        { path: 'car2.car', select: 'name image victory  odds' },
-                        { path: 'car2.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                        { path: 'car2.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                        { path: 'car2.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                        { path: 'car3.car', select: 'name image victory  odds' },
-                        { path: 'car3.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                        { path: 'car3.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                        { path: 'car3.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                ]);
-                if (findOne) {
-                        return res.status(200).send({ status: 200, message: "race find successfully.", data: findOne, });
-                } else {
-                        const cars = await Car.aggregate([{ $sample: { size: 3 } }]);
-                        if (cars.length > 0) {
-                                for (let i = 0; i < cars.length; i++) {
-                                        console.log(cars[i]._id);
-                                        car1 = cars[0]._id;
-                                        car2 = cars[1]._id;
-                                        car3 = cars[2]._id;
-                                        const speed = await Speed.aggregate([{ $match: { carId: cars[i]._id } }, { $sample: { size: 3 } },]);
-                                        for (let j = 0; j < speed.length; j++) {
-                                                if (i == 0) {
-                                                        speed1track1Id = speed[0]._id;
-                                                        speed1track2Id = speed[1]._id;
-                                                        speed1track3Id = speed[2]._id;
-                                                } else if (i == 1) {
-                                                        speed2track1Id = speed[0]._id;
-                                                        speed2track2Id = speed[1]._id;
-                                                        speed2track3Id = speed[2]._id;
-                                                } else if (i == 2) {
-                                                        speed3track1Id = speed[0]._id;
-                                                        speed3track2Id = speed[1]._id;
-                                                        speed3track3Id = speed[2]._id;
-                                                }
-                                        }
-                                }
-                        }
-                        req.body.raceId = await reffralCode();
-                        req.body.car1 = {
-                                car: car1,
-                                track1Id: speed1track1Id,
-                                track2Id: speed1track2Id,
-                                track3Id: speed1track3Id,
-                        };
-                        req.body.car2 = {
-                                car: car2,
-                                track1Id: speed2track1Id,
-                                track2Id: speed2track2Id,
-                                track3Id: speed2track3Id,
-                        };
-                        req.body.car3 = {
-                                car: car3,
-                                track1Id: speed3track1Id,
-                                track2Id: speed3track2Id,
-                                track3Id: speed3track3Id,
-                        };
-                        const car = await Race.create(req.body);
-                        let car6 = await Race.findOne({ _id: car._id }).populate([
-                                { path: 'car1.car', select: 'name image victory  odds' },
-                                { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                                { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                                { path: 'car1.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                                { path: 'car2.car', select: 'name image victory  odds' },
-                                { path: 'car2.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                                { path: 'car2.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                                { path: 'car2.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                                { path: 'car3.car', select: 'name image victory  odds' },
-                                { path: 'car3.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                                { path: 'car3.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                                { path: 'car3.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
-                        ]);
-                        if (car6) {
-                                return res.status(200).send({ status: 200, message: "race find successfully.", data: car6, });
-                        }
-                }
-        } catch (error) {
-                console.error("Error creating race:", error);
-        }
-};
-exports.createRace = async (req, res) => {
-        try {
                 let car1, car2, car3, speed1track1Id, speed2track1Id, speed3track1Id;
                 let findOne = await Race.findOne({ status: 'pending' }).populate([
                         { path: 'car1.car', select: 'name image victory  odds' },
@@ -275,7 +188,7 @@ exports.createRace = async (req, res) => {
                         req.body.raceNo = (totalRace % 10) + 1;
                         req.body.raceId = await reffralCode();
                         req.body.track1Id = track._id;
-                        req.body.status = 'started';
+                        req.body.status = 'pending';
                         const car = await Race.create(req.body);
                         let car6 = await Race.findOne({ _id: car._id }).populate([
                                 { path: 'car1.car', select: 'name image victory  odds' },
@@ -297,6 +210,154 @@ exports.createRace = async (req, res) => {
                 }
         } catch (error) {
                 console.error("Error creating race:", error);
+        }
+};
+function distributeRandomlyWithoutZero(total, parts) {
+        let distribution = Array(parts).fill(1);
+        for (let i = 0; i < total - parts; i++) {
+                let index;
+                do {
+                        index = Math.floor(Math.random() * parts);
+                } while (distribution[index] === 0);
+                distribution[index]++;
+        }
+        return distribution;
+}
+exports.createRace = async (req, res) => {
+        try {
+                let car1, car2, car3, speed1track1Id, speed2track1Id, speed3track1Id, speed1track2Id, speed1track3Id, speed2track2Id, speed2track3Id, speed3track2Id, speed3track3Id;;
+                let car1noOfTrack1, car1noOfTrack2, car1noOfTrack3, car2noOfTrack1, car2noOfTrack2, car2noOfTrack3, car3noOfTrack1, car3noOfTrack2, car3noOfTrack3;
+                let findOne = await Race.findOne({ status: 'pending' }).populate([{ path: 'car1.car', select: 'name image victory odds' }, { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.car', select: 'name image victory odds' }, { path: 'car2.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.car', select: 'name image victory odds' }, { path: 'car3.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },]);
+                if (findOne) {
+                        return res.status(200).send({ status: 200, message: 'Race found successfully.', data: findOne });
+                } else {
+                        const firstTrack = Math.floor(Math.random() * 3) + 1;
+                        console.log(firstTrack);
+                        let totalRace = await Race.find({}).count();
+                        const cars = await Car.aggregate([{ $sample: { size: 3 } }]);
+                        const track = await Track.aggregate([{ $sample: { size: 1 } }]);
+                        if (cars.length > 0) {
+                                const distribution = distributeRandomlyWithoutZero(6, 3);
+                                [car1noOfTrack1, car1noOfTrack2, car1noOfTrack3] = distribution;
+                                const distribution1 = distributeRandomlyWithoutZero(6, 3);
+                                [car2noOfTrack1, car2noOfTrack2, car2noOfTrack3] = distribution1;
+                                const distribution2 = distributeRandomlyWithoutZero(6, 3);
+                                [car3noOfTrack1, car3noOfTrack2, car3noOfTrack3] = distribution2;
+                                let firstTrack = Math.max(car1noOfTrack1, car2noOfTrack1, car3noOfTrack1);
+                                for (let i = 0; i < cars.length; i++) {
+                                        if (i === 0) {
+                                                car1 = cars[0]._id;
+                                                const speed = await Speed.findOne({ trackId: track[0]._id, carId: cars[0]._id });
+                                                if (firstTrack == 1) {
+                                                        speed1track1Id = speed._id;
+                                                        speed1track2Id = null;
+                                                        speed1track3Id = null;
+                                                }
+                                                if (firstTrack == 2) {
+                                                        speed1track1Id = null;
+                                                        speed1track2Id = speed._id;
+                                                        speed1track3Id = null;
+                                                }
+                                                if (firstTrack == 3) {
+                                                        speed1track1Id = null;
+                                                        speed1track2Id = null;
+                                                        speed1track3Id = speed._id;
+                                                }
+                                        } else if (i === 1) {
+                                                car2 = cars[1]._id;
+                                                const speed = await Speed.findOne({ trackId: track[0]._id, carId: cars[1]._id });
+                                                speed2track1Id = speed._id;
+                                                if (firstTrack == 1) {
+                                                        speed2track1Id = speed._id;
+                                                        speed2track2Id = null;
+                                                        speed2track3Id = null;
+                                                }
+                                                if (firstTrack == 2) {
+                                                        speed2track1Id = null;
+                                                        speed2track2Id = speed._id;
+                                                        speed2track3Id = null;
+                                                }
+                                                if (firstTrack == 3) {
+                                                        speed2track1Id = null;
+                                                        speed2track2Id = null;
+                                                        speed2track3Id = speed._id;
+                                                }
+                                        } else {
+                                                car3 = cars[2]._id;
+                                                const speed = await Speed.findOne({ trackId: track[0]._id, carId: cars[2]._id });
+                                                if (firstTrack == 1) {
+                                                        speed3track1Id = speed._id;
+                                                        speed3track2Id = null;
+                                                        speed3track3Id = null;
+                                                }
+                                                if (firstTrack == 2) {
+                                                        speed3track1Id = null;
+                                                        speed3track2Id = speed._id;
+                                                        speed3track3Id = null;
+                                                }
+                                                if (firstTrack == 3) {
+                                                        speed3track1Id = null;
+                                                        speed3track2Id = null;
+                                                        speed3track3Id = speed._id;
+                                                }
+                                        }
+                                }
+                                req.body.car1 = {
+                                        car: car1,
+                                        track1Id: speed1track1Id,
+                                        track2Id: speed1track2Id,
+                                        track3Id: speed1track3Id,
+                                        noOfTrack1: car1noOfTrack1,
+                                        noOfTrack2: car1noOfTrack2,
+                                        noOfTrack3: car1noOfTrack3,
+                                };
+                                req.body.car2 = {
+                                        car: car2,
+                                        track1Id: speed2track1Id,
+                                        track2Id: speed2track2Id,
+                                        track3Id: speed2track3Id,
+                                        noOfTrack1: car2noOfTrack1,
+                                        noOfTrack2: car2noOfTrack2,
+                                        noOfTrack3: car2noOfTrack3,
+                                };
+                                req.body.car3 = {
+                                        car: car3,
+                                        track1Id: speed3track1Id,
+                                        track2Id: speed3track2Id,
+                                        track3Id: speed3track3Id,
+                                        noOfTrack1: car3noOfTrack1,
+                                        noOfTrack2: car3noOfTrack2,
+                                        noOfTrack3: car3noOfTrack3,
+                                };
+                                req.body.raceNo = (totalRace % 10) + 1;
+                                req.body.raceId = await reffralCode();
+                                req.body.track1Id = track._id;
+                                req.body.status = 'pending';
+                                req.body.firstTrack = firstTrack;
+                                const createdRace = await Race.create(req.body);
+                                let car6 = await Race.findOne({ _id: createdRace._id }).populate([
+                                        { path: 'car1.car', select: 'name image victory odds' },
+                                        { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                        { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                        { path: 'car1.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                        { path: 'car2.car', select: 'name image victory odds' },
+                                        { path: 'car2.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                        { path: 'car2.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                        { path: 'car2.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                        { path: 'car3.car', select: 'name image victory odds' },
+                                        { path: 'car3.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                        { path: 'car3.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                        { path: 'car3.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
+                                ]);
+
+                                if (car6) {
+                                        return res.status(200).send({ status: 200, message: 'Race created successfully.', data: car6 });
+                                }
+                        }
+                }
+        } catch (error) {
+                console.error('Error creating race:', error);
+                res.status(500).send({ status: 500, message: 'Internal Server Error' });
         }
 };
 exports.getRaceByid = async (req, res) => {
@@ -329,7 +390,7 @@ exports.raceStart = async (req, res) => {
                         return res.status(404).send({ status: 404, message: "Race not found", data: {} });
                 } else {
                         if (user.status == 'pending') {
-                                let speed1track2Id, speed1track3Id, speed2track2Id, speed2track3Id, speed3track2Id, speed3track3Id;
+                                let speed1track1Id, speed1track2Id, speed1track3Id, speed2track1Id, speed2track2Id, speed2track3Id, speed3track1Id, speed3track2Id, speed3track3Id;
                                 const betAmounts = [user.car1BetAmount, user.car2BetAmount, user.car3BetAmount];
                                 const maxBetAmount = Math.max(...betAmounts);
                                 const minBetAmount = Math.min(...betAmounts);
@@ -341,48 +402,111 @@ exports.raceStart = async (req, res) => {
                                         const index = amounts.indexOf(amount);
                                         return ["I", "II", "III"][index];
                                 }
-                                console.log(user.raceNo);
                                 if (user.raceNo == 10) {
                                         if (minBetAmount === user.car1BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car1.car }).sort({ speed: -1 }).limit(2);
-                                                speed1track2Id = speed2[0]._id;
-                                                speed1track3Id = speed2[1]._id;
+                                                if (user.firstTrack == 1) {
+                                                        speed1track1Id = user.car1.track1Id;
+                                                        speed1track2Id = speed2[0]._id;
+                                                        speed1track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 2) {
+                                                        speed1track1Id = speed2[0]._id;
+                                                        speed1track2Id = user.car1.track2Id;
+                                                        speed1track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 3) {
+                                                        speed1track1Id = speed2[0]._id;
+                                                        speed1track2Id = speed2[1]._id;
+                                                        speed1track3Id = user.car1.track3Id;
+                                                }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car2.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed2track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed2track1Id = user.car2.track1Id;
+                                                                if (i == 0) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed2track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed2track2Id = user.car2.track2Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed2track3Id = user.car2.track3Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car3.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed3track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed3track1Id = user.car3.track1Id;
+                                                                if (i == 0) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed3track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed3track2Id = user.car3.track2Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed3track3Id = user.car3.track3Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
-                                                                track1Id: user.car1.track1Id,
+                                                                track1Id: speed1track1Id,
                                                                 track2Id: speed1track2Id,
                                                                 track3Id: speed1track3Id,
+                                                                noOfTrack1: user.car1.noOfTrack1,
+                                                                noOfTrack2: user.car1.noOfTrack2,
+                                                                noOfTrack3: user.car1.noOfTrack3,
                                                         },
                                                         car2: {
                                                                 car: user.car2.car,
-                                                                track1Id: user.car2.track1Id,
+                                                                track1Id: speed2track1Id,
                                                                 track2Id: speed2track2Id,
-                                                                track3Id: speed2track3Id
+                                                                track3Id: speed2track3Id,
+                                                                noOfTrack1: user.car2.noOfTrack1,
+                                                                noOfTrack2: user.car2.noOfTrack2,
+                                                                noOfTrack3: user.car2.noOfTrack3,
                                                         },
                                                         car3: {
                                                                 car: user.car3.car,
-                                                                track1Id: user.car3.track1Id,
+                                                                track1Id: speed3track1Id,
                                                                 track2Id: speed3track2Id,
-                                                                track3Id: speed3track3Id
+                                                                track3Id: speed3track3Id,
+                                                                noOfTrack1: user.car3.noOfTrack1,
+                                                                noOfTrack2: user.car3.noOfTrack2,
+                                                                noOfTrack3: user.car3.noOfTrack3,
                                                         },
                                                         status: "started",
                                                         maximum: maxBetEnum,
@@ -408,44 +532,108 @@ exports.raceStart = async (req, res) => {
                                                 return res.status(200).send({ status: 200, message: "car 1", data: findOne1 });
                                         } else if (minBetAmount === user.car2BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car2.car }).sort({ speed: -1 }).limit(2);
-                                                speed2track2Id = speed2[0]._id;
-                                                speed2track3Id = speed2[1]._id;
+                                                if (user.firstTrack == 1) {
+                                                        speed2track1Id = user.car2.track1Id;
+                                                        speed2track2Id = speed2[0]._id;
+                                                        speed2track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 2) {
+                                                        speed2track1Id = speed2[0]._id;
+                                                        speed2track2Id = user.car2.track2Id;
+                                                        speed2track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 3) {
+                                                        speed2track1Id = speed2[0]._id;
+                                                        speed2track2Id = speed2[1]._id;
+                                                        speed2track3Id = user.car2.track3Id;
+                                                }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car1.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed1track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed1track1Id = user.car1.track1Id;
+                                                                if (i == 0) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed1track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed1track2Id = user.car1.track2Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed1track3Id = user.car1.track3Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car3.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed3track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed3track1Id = user.car3.track1Id;
+                                                                if (i == 0) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed3track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed3track2Id = user.car3.track2Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed3track3Id = user.car3.track3Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
-                                                                track1Id: user.car1.track1Id,
+                                                                track1Id: speed1track1Id,
                                                                 track2Id: speed1track2Id,
                                                                 track3Id: speed1track3Id,
+                                                                noOfTrack1: user.car1.noOfTrack1,
+                                                                noOfTrack2: user.car1.noOfTrack2,
+                                                                noOfTrack3: user.car1.noOfTrack3,
                                                         },
                                                         car2: {
                                                                 car: user.car2.car,
-                                                                track1Id: user.car2.track1Id,
+                                                                track1Id: speed2track1Id,
                                                                 track2Id: speed2track2Id,
-                                                                track3Id: speed2track3Id
+                                                                track3Id: speed2track3Id,
+                                                                noOfTrack1: user.car2.noOfTrack1,
+                                                                noOfTrack2: user.car2.noOfTrack2,
+                                                                noOfTrack3: user.car2.noOfTrack3,
                                                         },
                                                         car3: {
                                                                 car: user.car3.car,
-                                                                track1Id: user.car3.track1Id,
+                                                                track1Id: speed3track1Id,
                                                                 track2Id: speed3track2Id,
-                                                                track3Id: speed3track3Id
+                                                                track3Id: speed3track3Id,
+                                                                noOfTrack1: user.car3.noOfTrack1,
+                                                                noOfTrack2: user.car3.noOfTrack2,
+                                                                noOfTrack3: user.car3.noOfTrack3,
                                                         },
                                                         status: "started",
                                                         maximum: maxBetEnum,
@@ -471,44 +659,108 @@ exports.raceStart = async (req, res) => {
                                                 return res.status(200).send({ status: 200, message: "car 1", data: findOne1 });
                                         } else if (minBetAmount === user.car3BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car3.car }).sort({ speed: -1 }).limit(2);
-                                                speed3track2Id = speed2[0]._id;
-                                                speed3track3Id = speed2[1]._id;
+                                                if (user.firstTrack == 1) {
+                                                        speed3track1Id = user.car3.track1Id;
+                                                        speed3track2Id = speed2[0]._id;
+                                                        speed3track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 2) {
+                                                        speed3track1Id = speed2[0]._id;
+                                                        speed3track2Id = user.car3.track2Id;
+                                                        speed3track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 3) {
+                                                        speed3track1Id = speed2[0]._id;
+                                                        speed3track2Id = speed2[1]._id;
+                                                        speed3track3Id = user.car3.track3Id;
+                                                }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car1.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed1track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed1track1Id = user.car1.track1Id;
+                                                                if (i == 0) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed1track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed1track2Id = user.car1.track2Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed1track3Id = user.car1.track3Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car2.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed2track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed2track1Id = user.car2.track1Id;
+                                                                if (i == 0) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed2track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed2track2Id = user.car2.track2Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed2track3Id = user.car2.track3Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
-                                                                track1Id: user.car1.track1Id,
+                                                                track1Id: speed1track1Id,
                                                                 track2Id: speed1track2Id,
                                                                 track3Id: speed1track3Id,
+                                                                noOfTrack1: user.car1.noOfTrack1,
+                                                                noOfTrack2: user.car1.noOfTrack2,
+                                                                noOfTrack3: user.car1.noOfTrack3,
                                                         },
                                                         car2: {
                                                                 car: user.car2.car,
-                                                                track1Id: user.car2.track1Id,
+                                                                track1Id: speed2track1Id,
                                                                 track2Id: speed2track2Id,
-                                                                track3Id: speed2track3Id
+                                                                track3Id: speed2track3Id,
+                                                                noOfTrack1: user.car2.noOfTrack1,
+                                                                noOfTrack2: user.car2.noOfTrack2,
+                                                                noOfTrack3: user.car2.noOfTrack3,
                                                         },
                                                         car3: {
                                                                 car: user.car3.car,
-                                                                track1Id: user.car3.track1Id,
+                                                                track1Id: speed3track1Id,
                                                                 track2Id: speed3track2Id,
-                                                                track3Id: speed3track3Id
+                                                                track3Id: speed3track3Id,
+                                                                noOfTrack1: user.car3.noOfTrack1,
+                                                                noOfTrack2: user.car3.noOfTrack2,
+                                                                noOfTrack3: user.car3.noOfTrack3,
                                                         },
                                                         status: "started",
                                                         maximum: maxBetEnum,
@@ -537,44 +789,108 @@ exports.raceStart = async (req, res) => {
                                 if ((user.raceNo == 1) || (user.raceNo == 3) || (user.raceNo == 5) || (user.raceNo == 7) || (user.raceNo == 8) || (user.raceNo == 9)) {
                                         if (maxBetAmount === user.car1BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car1.car }).sort({ speed: -1 }).limit(2);
-                                                speed1track2Id = speed2[0]._id;
-                                                speed1track3Id = speed2[1]._id;
+                                                if (user.firstTrack == 1) {
+                                                        speed1track1Id = user.car1.track1Id;
+                                                        speed1track2Id = speed2[0]._id;
+                                                        speed1track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 2) {
+                                                        speed1track1Id = speed2[0]._id;
+                                                        speed1track2Id = user.car1.track2Id;
+                                                        speed1track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 3) {
+                                                        speed1track1Id = speed2[0]._id;
+                                                        speed1track2Id = speed2[1]._id;
+                                                        speed1track3Id = user.car1.track3Id;
+                                                }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car2.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed2track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed2track1Id = user.car2.track1Id;
+                                                                if (i == 0) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed2track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed2track2Id = user.car2.track2Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed2track3Id = user.car2.track3Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car3.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed3track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed3track1Id = user.car3.track1Id;
+                                                                if (i == 0) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed3track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed3track2Id = user.car3.track2Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed3track3Id = user.car3.track3Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
-                                                                track1Id: user.car1.track1Id,
+                                                                track1Id: speed1track1Id,
                                                                 track2Id: speed1track2Id,
                                                                 track3Id: speed1track3Id,
+                                                                noOfTrack1: user.car1.noOfTrack1,
+                                                                noOfTrack2: user.car1.noOfTrack2,
+                                                                noOfTrack3: user.car1.noOfTrack3,
                                                         },
                                                         car2: {
                                                                 car: user.car2.car,
-                                                                track1Id: user.car2.track1Id,
+                                                                track1Id: speed2track1Id,
                                                                 track2Id: speed2track2Id,
-                                                                track3Id: speed2track3Id
+                                                                track3Id: speed2track3Id,
+                                                                noOfTrack1: user.car2.noOfTrack1,
+                                                                noOfTrack2: user.car2.noOfTrack2,
+                                                                noOfTrack3: user.car2.noOfTrack3,
                                                         },
                                                         car3: {
                                                                 car: user.car3.car,
-                                                                track1Id: user.car3.track1Id,
+                                                                track1Id: speed3track1Id,
                                                                 track2Id: speed3track2Id,
-                                                                track3Id: speed3track3Id
+                                                                track3Id: speed3track3Id,
+                                                                noOfTrack1: user.car3.noOfTrack1,
+                                                                noOfTrack2: user.car3.noOfTrack2,
+                                                                noOfTrack3: user.car3.noOfTrack3,
                                                         },
                                                         status: "started",
                                                         maximum: maxBetEnum,
@@ -600,44 +916,108 @@ exports.raceStart = async (req, res) => {
                                                 return res.status(200).send({ status: 200, message: "car 1", data: findOne1 });
                                         } else if (maxBetAmount === user.car2BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car2.car }).sort({ speed: -1 }).limit(2);
-                                                speed2track2Id = speed2[0]._id;
-                                                speed2track3Id = speed2[1]._id;
+                                                if (user.firstTrack == 1) {
+                                                        speed2track1Id = user.car2.track1Id;
+                                                        speed2track2Id = speed2[0]._id;
+                                                        speed2track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 2) {
+                                                        speed2track1Id = speed2[0]._id;
+                                                        speed2track2Id = user.car2.track2Id;
+                                                        speed2track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 3) {
+                                                        speed2track1Id = speed2[0]._id;
+                                                        speed2track2Id = speed2[1]._id;
+                                                        speed2track3Id = user.car2.track3Id;
+                                                }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car1.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed1track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed1track1Id = user.car1.track1Id;
+                                                                if (i == 0) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed1track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed1track2Id = user.car1.track2Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed1track3Id = user.car1.track3Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car3.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed3track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed3track1Id = user.car3.track1Id;
+                                                                if (i == 0) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed3track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed3track2Id = user.car3.track2Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed3track3Id = user.car3.track3Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
-                                                                track1Id: user.car1.track1Id,
+                                                                track1Id: speed1track1Id,
                                                                 track2Id: speed1track2Id,
                                                                 track3Id: speed1track3Id,
+                                                                noOfTrack1: user.car1.noOfTrack1,
+                                                                noOfTrack2: user.car1.noOfTrack2,
+                                                                noOfTrack3: user.car1.noOfTrack3,
                                                         },
                                                         car2: {
                                                                 car: user.car2.car,
-                                                                track1Id: user.car2.track1Id,
+                                                                track1Id: speed2track1Id,
                                                                 track2Id: speed2track2Id,
-                                                                track3Id: speed2track3Id
+                                                                track3Id: speed2track3Id,
+                                                                noOfTrack1: user.car2.noOfTrack1,
+                                                                noOfTrack2: user.car2.noOfTrack2,
+                                                                noOfTrack3: user.car2.noOfTrack3,
                                                         },
                                                         car3: {
                                                                 car: user.car3.car,
-                                                                track1Id: user.car3.track1Id,
+                                                                track1Id: speed3track1Id,
                                                                 track2Id: speed3track2Id,
-                                                                track3Id: speed3track3Id
+                                                                track3Id: speed3track3Id,
+                                                                noOfTrack1: user.car3.noOfTrack1,
+                                                                noOfTrack2: user.car3.noOfTrack2,
+                                                                noOfTrack3: user.car3.noOfTrack3,
                                                         },
                                                         status: "started",
                                                         maximum: maxBetEnum,
@@ -663,44 +1043,108 @@ exports.raceStart = async (req, res) => {
                                                 return res.status(200).send({ status: 200, message: "car 1", data: findOne1 });
                                         } else if (maxBetAmount === user.car3BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car3.car }).sort({ speed: -1 }).limit(2);
-                                                speed3track2Id = speed2[0]._id;
-                                                speed3track3Id = speed2[1]._id;
+                                                if (user.firstTrack == 1) {
+                                                        speed3track1Id = user.car3.track1Id;
+                                                        speed3track2Id = speed2[0]._id;
+                                                        speed3track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 2) {
+                                                        speed3track1Id = speed2[0]._id;
+                                                        speed3track2Id = user.car3.track2Id;
+                                                        speed3track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 3) {
+                                                        speed3track1Id = speed2[0]._id;
+                                                        speed3track2Id = speed2[1]._id;
+                                                        speed3track3Id = user.car3.track3Id;
+                                                }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car1.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed1track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed1track1Id = user.car1.track1Id;
+                                                                if (i == 0) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed1track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed1track2Id = user.car1.track2Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed1track3Id = user.car1.track3Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car2.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed2track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed2track1Id = user.car2.track1Id;
+                                                                if (i == 0) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed2track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed2track2Id = user.car2.track2Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed2track3Id = user.car2.track3Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
-                                                                track1Id: user.car1.track1Id,
+                                                                track1Id: speed1track1Id,
                                                                 track2Id: speed1track2Id,
                                                                 track3Id: speed1track3Id,
+                                                                noOfTrack1: user.car1.noOfTrack1,
+                                                                noOfTrack2: user.car1.noOfTrack2,
+                                                                noOfTrack3: user.car1.noOfTrack3,
                                                         },
                                                         car2: {
                                                                 car: user.car2.car,
-                                                                track1Id: user.car2.track1Id,
+                                                                track1Id: speed2track1Id,
                                                                 track2Id: speed2track2Id,
-                                                                track3Id: speed2track3Id
+                                                                track3Id: speed2track3Id,
+                                                                noOfTrack1: user.car2.noOfTrack1,
+                                                                noOfTrack2: user.car2.noOfTrack2,
+                                                                noOfTrack3: user.car2.noOfTrack3,
                                                         },
                                                         car3: {
                                                                 car: user.car3.car,
-                                                                track1Id: user.car3.track1Id,
+                                                                track1Id: speed3track1Id,
                                                                 track2Id: speed3track2Id,
-                                                                track3Id: speed3track3Id
+                                                                track3Id: speed3track3Id,
+                                                                noOfTrack1: user.car3.noOfTrack1,
+                                                                noOfTrack2: user.car3.noOfTrack2,
+                                                                noOfTrack3: user.car3.noOfTrack3,
                                                         },
                                                         status: "started",
                                                         maximum: maxBetEnum,
@@ -729,44 +1173,108 @@ exports.raceStart = async (req, res) => {
                                 if ((user.raceNo == 2) || (user.raceNo == 4) || (user.raceNo == 6)) {
                                         if (mediumBetAmount === user.car1BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car1.car }).sort({ speed: -1 }).limit(2);
-                                                speed1track2Id = speed2[0]._id;
-                                                speed1track3Id = speed2[1]._id;
+                                                if (user.firstTrack == 1) {
+                                                        speed1track1Id = user.car1.track1Id;
+                                                        speed1track2Id = speed2[0]._id;
+                                                        speed1track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 2) {
+                                                        speed1track1Id = speed2[0]._id;
+                                                        speed1track2Id = user.car1.track2Id;
+                                                        speed1track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 3) {
+                                                        speed1track1Id = speed2[0]._id;
+                                                        speed1track2Id = speed2[1]._id;
+                                                        speed1track3Id = user.car1.track3Id;
+                                                }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car2.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed2track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed2track1Id = user.car2.track1Id;
+                                                                if (i == 0) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed2track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed2track2Id = user.car2.track2Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed2track3Id = user.car2.track3Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car3.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed3track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed3track1Id = user.car3.track1Id;
+                                                                if (i == 0) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed3track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed3track2Id = user.car3.track2Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed3track3Id = user.car3.track3Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
-                                                                track1Id: user.car1.track1Id,
+                                                                track1Id: speed1track1Id,
                                                                 track2Id: speed1track2Id,
                                                                 track3Id: speed1track3Id,
+                                                                noOfTrack1: user.car1.noOfTrack1,
+                                                                noOfTrack2: user.car1.noOfTrack2,
+                                                                noOfTrack3: user.car1.noOfTrack3,
                                                         },
                                                         car2: {
                                                                 car: user.car2.car,
-                                                                track1Id: user.car2.track1Id,
+                                                                track1Id: speed2track1Id,
                                                                 track2Id: speed2track2Id,
-                                                                track3Id: speed2track3Id
+                                                                track3Id: speed2track3Id,
+                                                                noOfTrack1: user.car2.noOfTrack1,
+                                                                noOfTrack2: user.car2.noOfTrack2,
+                                                                noOfTrack3: user.car2.noOfTrack3,
                                                         },
                                                         car3: {
                                                                 car: user.car3.car,
-                                                                track1Id: user.car3.track1Id,
+                                                                track1Id: speed3track1Id,
                                                                 track2Id: speed3track2Id,
-                                                                track3Id: speed3track3Id
+                                                                track3Id: speed3track3Id,
+                                                                noOfTrack1: user.car3.noOfTrack1,
+                                                                noOfTrack2: user.car3.noOfTrack2,
+                                                                noOfTrack3: user.car3.noOfTrack3,
                                                         },
                                                         status: "started",
                                                         maximum: maxBetEnum,
@@ -792,44 +1300,108 @@ exports.raceStart = async (req, res) => {
                                                 return res.status(200).send({ status: 200, message: "car 1", data: findOne1 });
                                         } else if (mediumBetAmount === user.car2BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car2.car }).sort({ speed: -1 }).limit(2);
-                                                speed2track2Id = speed2[0]._id;
-                                                speed2track3Id = speed2[1]._id;
+                                                if (user.firstTrack == 1) {
+                                                        speed2track1Id = user.car2.track1Id;
+                                                        speed2track2Id = speed2[0]._id;
+                                                        speed2track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 2) {
+                                                        speed2track1Id = speed2[0]._id;
+                                                        speed2track2Id = user.car2.track2Id;
+                                                        speed2track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 3) {
+                                                        speed2track1Id = speed2[0]._id;
+                                                        speed2track2Id = speed2[1]._id;
+                                                        speed2track3Id = user.car2.track3Id;
+                                                }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car1.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed1track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed1track1Id = user.car1.track1Id;
+                                                                if (i == 0) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed1track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed1track2Id = user.car1.track2Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed1track3Id = user.car1.track3Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car3.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed3track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed3track1Id = user.car3.track1Id;
+                                                                if (i == 0) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed3track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed3track2Id = user.car3.track2Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed3track3Id = user.car3.track3Id;
+                                                                if (i == 0) {
+                                                                        speed3track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed3track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
-                                                                track1Id: user.car1.track1Id,
+                                                                track1Id: speed1track1Id,
                                                                 track2Id: speed1track2Id,
                                                                 track3Id: speed1track3Id,
+                                                                noOfTrack1: user.car1.noOfTrack1,
+                                                                noOfTrack2: user.car1.noOfTrack2,
+                                                                noOfTrack3: user.car1.noOfTrack3,
                                                         },
                                                         car2: {
                                                                 car: user.car2.car,
-                                                                track1Id: user.car2.track1Id,
+                                                                track1Id: speed2track1Id,
                                                                 track2Id: speed2track2Id,
-                                                                track3Id: speed2track3Id
+                                                                track3Id: speed2track3Id,
+                                                                noOfTrack1: user.car2.noOfTrack1,
+                                                                noOfTrack2: user.car2.noOfTrack2,
+                                                                noOfTrack3: user.car2.noOfTrack3,
                                                         },
                                                         car3: {
                                                                 car: user.car3.car,
-                                                                track1Id: user.car3.track1Id,
+                                                                track1Id: speed3track1Id,
                                                                 track2Id: speed3track2Id,
-                                                                track3Id: speed3track3Id
+                                                                track3Id: speed3track3Id,
+                                                                noOfTrack1: user.car3.noOfTrack1,
+                                                                noOfTrack2: user.car3.noOfTrack2,
+                                                                noOfTrack3: user.car3.noOfTrack3,
                                                         },
                                                         status: "started",
                                                         maximum: maxBetEnum,
@@ -855,44 +1427,108 @@ exports.raceStart = async (req, res) => {
                                                 return res.status(200).send({ status: 200, message: "car 1", data: findOne1 });
                                         } else if (mediumBetAmount === user.car3BetAmount) {
                                                 const speed2 = await Speed.find({ carId: user.car3.car }).sort({ speed: -1 }).limit(2);
-                                                speed3track2Id = speed2[0]._id;
-                                                speed3track3Id = speed2[1]._id;
+                                                if (user.firstTrack == 1) {
+                                                        speed3track1Id = user.car3.track1Id;
+                                                        speed3track2Id = speed2[0]._id;
+                                                        speed3track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 2) {
+                                                        speed3track1Id = speed2[0]._id;
+                                                        speed3track2Id = user.car3.track2Id;
+                                                        speed3track3Id = speed2[1]._id;
+                                                }
+                                                if (user.firstTrack == 3) {
+                                                        speed3track1Id = speed2[0]._id;
+                                                        speed3track2Id = speed2[1]._id;
+                                                        speed3track3Id = user.car3.track3Id;
+                                                }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car1.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed1track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed1track1Id = user.car1.track1Id;
+                                                                if (i == 0) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed1track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed1track2Id = user.car1.track2Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed1track3Id = user.car1.track3Id;
+                                                                if (i == 0) {
+                                                                        speed1track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed1track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 for (let i = 0; i < speed2.length; i++) {
                                                         const speed1 = await Speed.findOne({ carId: user.car2.car, trackId: speed2[i].trackId }).sort({ speed: 1 }).limit(2);
-                                                        if (i == 0) {
-                                                                speed2track2Id = speed1._id;
+                                                        if (user.firstTrack == 1) {
+                                                                speed2track1Id = user.car2.track1Id;
+                                                                if (i == 0) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
                                                         }
-                                                        if (i == 1) {
-                                                                speed2track3Id = speed1._id;
+                                                        if (user.firstTrack == 2) {
+                                                                speed2track2Id = user.car2.track2Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track3Id = speed1._id;
+                                                                }
+                                                        }
+                                                        if (user.firstTrack == 3) {
+                                                                speed2track3Id = user.car2.track3Id;
+                                                                if (i == 0) {
+                                                                        speed2track1Id = speed1._id;
+                                                                }
+                                                                if (i == 1) {
+                                                                        speed2track2Id = speed1._id;
+                                                                }
                                                         }
                                                 }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
-                                                                track1Id: user.car1.track1Id,
+                                                                track1Id: speed1track1Id,
                                                                 track2Id: speed1track2Id,
                                                                 track3Id: speed1track3Id,
+                                                                noOfTrack1: user.car1.noOfTrack1,
+                                                                noOfTrack2: user.car1.noOfTrack2,
+                                                                noOfTrack3: user.car1.noOfTrack3,
                                                         },
                                                         car2: {
                                                                 car: user.car2.car,
-                                                                track1Id: user.car2.track1Id,
+                                                                track1Id: speed2track1Id,
                                                                 track2Id: speed2track2Id,
-                                                                track3Id: speed2track3Id
+                                                                track3Id: speed2track3Id,
+                                                                noOfTrack1: user.car2.noOfTrack1,
+                                                                noOfTrack2: user.car2.noOfTrack2,
+                                                                noOfTrack3: user.car2.noOfTrack3,
                                                         },
                                                         car3: {
                                                                 car: user.car3.car,
-                                                                track1Id: user.car3.track1Id,
+                                                                track1Id: speed3track1Id,
                                                                 track2Id: speed3track2Id,
-                                                                track3Id: speed3track3Id
+                                                                track3Id: speed3track3Id,
+                                                                noOfTrack1: user.car3.noOfTrack1,
+                                                                noOfTrack2: user.car3.noOfTrack2,
+                                                                noOfTrack3: user.car3.noOfTrack3,
                                                         },
                                                         status: "started",
                                                         maximum: maxBetEnum,

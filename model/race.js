@@ -25,6 +25,15 @@ var userSchema = new schema(
                                 type: schema.Types.ObjectId,
                                 ref: "speed"
                         },
+                        noOfTrack1: {
+                                type: Number,
+                        },
+                        noOfTrack2: {
+                                type: Number,
+                        },
+                        noOfTrack3: {
+                                type: Number,
+                        },
                 },
                 car2: {
                         car: {
@@ -42,6 +51,15 @@ var userSchema = new schema(
                         track3Id: {
                                 type: schema.Types.ObjectId,
                                 ref: "speed"
+                        },
+                        noOfTrack1: {
+                                type: Number,
+                        },
+                        noOfTrack2: {
+                                type: Number,
+                        },
+                        noOfTrack3: {
+                                type: Number,
                         },
                 },
                 car3: {
@@ -61,6 +79,20 @@ var userSchema = new schema(
                                 type: schema.Types.ObjectId,
                                 ref: "speed"
                         },
+                        noOfTrack1: {
+                                type: Number,
+                        },
+                        noOfTrack2: {
+                                type: Number,
+                        },
+                        noOfTrack3: {
+                                type: Number,
+                        },
+                },
+                firstTrack: {
+                        type: Number,
+                        min: 1,
+                        max: 3
                 },
                 noOfuser: {
                         type: Number,
