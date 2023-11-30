@@ -239,11 +239,11 @@ exports.createRace = async (req, res) => {
                         if (cars.length > 0) {
                                 const distribution = distributeRandomlyWithoutZero(6, 3);
                                 [car1noOfTrack1, car1noOfTrack2, car1noOfTrack3] = distribution;
-                                const distribution1 = distributeRandomlyWithoutZero(6, 3);
-                                [car2noOfTrack1, car2noOfTrack2, car2noOfTrack3] = distribution1;
-                                const distribution2 = distributeRandomlyWithoutZero(6, 3);
-                                [car3noOfTrack1, car3noOfTrack2, car3noOfTrack3] = distribution2;
-                                let firstTrack = Math.max(car1noOfTrack1, car2noOfTrack1, car3noOfTrack1);
+                                // const distribution1 = distributeRandomlyWithoutZero(6, 3);
+                                // [car2noOfTrack1, car2noOfTrack2, car2noOfTrack3] = distribution1;
+                                // const distribution2 = distributeRandomlyWithoutZero(6, 3);
+                                // [car3noOfTrack1, car3noOfTrack2, car3noOfTrack3] = distribution2;
+                                // let firstTrack = Math.max(car1noOfTrack1, car2noOfTrack1, car3noOfTrack1);
                                 for (let i = 0; i < cars.length; i++) {
                                         if (i === 0) {
                                                 car1 = cars[0]._id;
@@ -316,18 +316,18 @@ exports.createRace = async (req, res) => {
                                         track1Id: speed2track1Id,
                                         track2Id: speed2track2Id,
                                         track3Id: speed2track3Id,
-                                        noOfTrack1: car2noOfTrack1,
-                                        noOfTrack2: car2noOfTrack2,
-                                        noOfTrack3: car2noOfTrack3,
+                                        noOfTrack1: car1noOfTrack1,
+                                        noOfTrack2: car1noOfTrack2,
+                                        noOfTrack3: car1noOfTrack3,
                                 };
                                 req.body.car3 = {
                                         car: car3,
                                         track1Id: speed3track1Id,
                                         track2Id: speed3track2Id,
                                         track3Id: speed3track3Id,
-                                        noOfTrack1: car3noOfTrack1,
-                                        noOfTrack2: car3noOfTrack2,
-                                        noOfTrack3: car3noOfTrack3,
+                                        noOfTrack1: car1noOfTrack1,
+                                        noOfTrack2: car1noOfTrack2,
+                                        noOfTrack3: car1noOfTrack3,
                                 };
                                 req.body.raceNo = (totalRace % 10) + 1;
                                 req.body.raceId = await reffralCode();
