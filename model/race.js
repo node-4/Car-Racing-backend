@@ -114,6 +114,9 @@ var userSchema = new schema(
                         type: Number,
                         default: 0
                 },
+                winCar: {
+                        type: String,
+                },
                 maximum: {
                         type: String,
                         enum: ["I", "II", "III"]

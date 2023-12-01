@@ -385,10 +385,17 @@ exports.getRace = async (req, res) => {
 };
 exports.raceStart = async (req, res) => {
         try {
+                const user100 = await Race.findOne({ _id: req.params.id }).populate([
+                        { path: 'car1.car', select: 'name image victory  odds' },
+                        { path: 'car2.car', select: 'name image victory  odds' },
+                        { path: 'car3.car', select: 'name image victory  odds' },
+                ]);;
                 const user = await Race.findOne({ _id: req.params.id });
                 if (!user) {
                         return res.status(404).send({ status: 404, message: "Race not found", data: {} });
                 } else {
+                        let car1Name = user100.car1.car.name, car2Name = user100.car2.car.name, car3Name = user100.car3.car.name;
+                        console.log(car1Name, car2Name, car3Name);
                         if (user.status == 'pending') {
                                 let speed1track1Id, speed1track2Id, speed1track3Id, speed2track1Id, speed2track2Id, speed2track3Id, speed3track1Id, speed3track2Id, speed3track3Id;
                                 const betAmounts = [user.car1BetAmount, user.car2BetAmount, user.car3BetAmount];
@@ -480,6 +487,13 @@ exports.raceStart = async (req, res) => {
                                                                 }
                                                         }
                                                 }
+                                                if (minBetEnum == "I") {
+                                                        winCar = car1Name;
+                                                } else if (minBetEnum == "II") {
+                                                        winCar = car2Name;
+                                                } else {
+                                                        winCar = car3Name;
+                                                }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
@@ -512,7 +526,8 @@ exports.raceStart = async (req, res) => {
                                                         maximum: maxBetEnum,
                                                         medium: mediumBetEnum,
                                                         lowest: minBetEnum,
-                                                        win: "low"
+                                                        win: "low",
+                                                        winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
@@ -607,6 +622,13 @@ exports.raceStart = async (req, res) => {
                                                                 }
                                                         }
                                                 }
+                                                if (minBetEnum == "I") {
+                                                        winCar = car1Name;
+                                                } else if (minBetEnum == "II") {
+                                                        winCar = car2Name;
+                                                } else {
+                                                        winCar = car3Name;
+                                                }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
@@ -639,7 +661,8 @@ exports.raceStart = async (req, res) => {
                                                         maximum: maxBetEnum,
                                                         medium: mediumBetEnum,
                                                         lowest: minBetEnum,
-                                                        win: "low"
+                                                        win: "low",
+                                                        winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
@@ -734,6 +757,13 @@ exports.raceStart = async (req, res) => {
                                                                 }
                                                         }
                                                 }
+                                                if (minBetEnum == "I") {
+                                                        winCar = car1Name;
+                                                } else if (minBetEnum == "II") {
+                                                        winCar = car2Name;
+                                                } else {
+                                                        winCar = car3Name;
+                                                }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
@@ -766,7 +796,8 @@ exports.raceStart = async (req, res) => {
                                                         maximum: maxBetEnum,
                                                         medium: mediumBetEnum,
                                                         lowest: minBetEnum,
-                                                        win: "low"
+                                                        win: "low",
+                                                        winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
@@ -864,6 +895,13 @@ exports.raceStart = async (req, res) => {
                                                                 }
                                                         }
                                                 }
+                                                if (minBetEnum == "I") {
+                                                        winCar = car1Name;
+                                                } else if (minBetEnum == "II") {
+                                                        winCar = car2Name;
+                                                } else {
+                                                        winCar = car3Name;
+                                                }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
@@ -896,7 +934,8 @@ exports.raceStart = async (req, res) => {
                                                         maximum: maxBetEnum,
                                                         medium: mediumBetEnum,
                                                         lowest: minBetEnum,
-                                                        win: "max"
+                                                        win: "max",
+                                                        winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
@@ -991,6 +1030,13 @@ exports.raceStart = async (req, res) => {
                                                                 }
                                                         }
                                                 }
+                                                if (minBetEnum == "I") {
+                                                        winCar = car1Name;
+                                                } else if (minBetEnum == "II") {
+                                                        winCar = car2Name;
+                                                } else {
+                                                        winCar = car3Name;
+                                                }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
@@ -1023,7 +1069,8 @@ exports.raceStart = async (req, res) => {
                                                         maximum: maxBetEnum,
                                                         medium: mediumBetEnum,
                                                         lowest: minBetEnum,
-                                                        win: "max"
+                                                        win: "max",
+                                                        winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
@@ -1118,6 +1165,13 @@ exports.raceStart = async (req, res) => {
                                                                 }
                                                         }
                                                 }
+                                                if (minBetEnum == "I") {
+                                                        winCar = car1Name;
+                                                } else if (minBetEnum == "II") {
+                                                        winCar = car2Name;
+                                                } else {
+                                                        winCar = car3Name;
+                                                }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
@@ -1150,7 +1204,8 @@ exports.raceStart = async (req, res) => {
                                                         maximum: maxBetEnum,
                                                         medium: mediumBetEnum,
                                                         lowest: minBetEnum,
-                                                        win: "max"
+                                                        win: "max",
+                                                        winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
@@ -1248,6 +1303,13 @@ exports.raceStart = async (req, res) => {
                                                                 }
                                                         }
                                                 }
+                                                if (minBetEnum == "I") {
+                                                        winCar = car1Name;
+                                                } else if (minBetEnum == "II") {
+                                                        winCar = car2Name;
+                                                } else {
+                                                        winCar = car3Name;
+                                                }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
@@ -1280,7 +1342,8 @@ exports.raceStart = async (req, res) => {
                                                         maximum: maxBetEnum,
                                                         medium: mediumBetEnum,
                                                         lowest: minBetEnum,
-                                                        win: "med"
+                                                        win: "med",
+                                                        winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
@@ -1375,6 +1438,13 @@ exports.raceStart = async (req, res) => {
                                                                 }
                                                         }
                                                 }
+                                                if (minBetEnum == "I") {
+                                                        winCar = car1Name;
+                                                } else if (minBetEnum == "II") {
+                                                        winCar = car2Name;
+                                                } else {
+                                                        winCar = car3Name;
+                                                }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
@@ -1407,7 +1477,8 @@ exports.raceStart = async (req, res) => {
                                                         maximum: maxBetEnum,
                                                         medium: mediumBetEnum,
                                                         lowest: minBetEnum,
-                                                        win: "med"
+                                                        win: "med",
+                                                        winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
@@ -1502,6 +1573,13 @@ exports.raceStart = async (req, res) => {
                                                                 }
                                                         }
                                                 }
+                                                if (minBetEnum == "I") {
+                                                        winCar = car1Name;
+                                                } else if (minBetEnum == "II") {
+                                                        winCar = car2Name;
+                                                } else {
+                                                        winCar = car3Name;
+                                                }
                                                 let obj = {
                                                         car1: {
                                                                 car: user.car1.car,
@@ -1534,7 +1612,8 @@ exports.raceStart = async (req, res) => {
                                                         maximum: maxBetEnum,
                                                         medium: mediumBetEnum,
                                                         lowest: minBetEnum,
-                                                        win: "med"
+                                                        win: "med",
+                                                        winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
