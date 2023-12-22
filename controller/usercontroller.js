@@ -384,7 +384,7 @@ exports.createRace = async (req, res) => {
 };
 exports.getRaceByid = async (req, res) => {
         try {
-                const user = await Race.findById({ _id: req.params.id }).select('noOfuser betsAmount car1BetAmount car2BetAmount car3BetAmount');
+                const user = await Race.findById({ _id: req.params.id }).select('status noOfuser betsAmount car1BetAmount car2BetAmount car3BetAmount');
                 if (!user) {
                         return res.status(404).send({ status: 404, message: "Race  not found ", data: {}, });
                 } else {
