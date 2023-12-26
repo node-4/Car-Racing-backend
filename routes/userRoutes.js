@@ -20,5 +20,6 @@ module.exports = (app) => {
         app.get("/api/carwiseWinners/:date", auth.carwisewinningamountondate);
         app.get("/api/carwisewinningamountondatebyToken/:date", authJwt.verifyToken, auth.carwisewinningamountondatebyToken);
         app.get("/api/carondate", auth.carondate);
+        app.get("/api/v1/getRaceStart", auth.getRaceStart);
         app.get("/api/v1/Bet/getBet/:raceId", authJwt.verifyToken, auth.getBet);
 }

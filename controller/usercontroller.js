@@ -7,6 +7,7 @@ const Race = require("../model/race");
 const Bet = require("../model/bets");
 const Track = require("../model/track");
 const winingSenario = require("../model/winingSenario");
+const raceStart = require("../model/raceStart");
 exports.socialLogin = async (req, res) => {
         try {
                 let userData = await User.findOne({ $or: [{ mobileNumber: req.body.mobileNumber }, { socialId: req.body.socialId }, { socialType: req.body.socialType }] });
@@ -242,7 +243,7 @@ exports.createRace = async (req, res) => {
                                         return { max: getRandomIndices(maxCount, allIndices), med: getRandomIndices(medCount, allIndices), low: getRandomIndices(lowCount, allIndices) };
                                 }
                                 const result12 = generateRandomIndices(6, 3, 1, 10);
-                                if ((result12.low.length == 1) && (result12.med.length  == 3) && (result12.max.length  == 6)) {
+                                if ((result12.low.length == 1) && (result12.med.length == 3) && (result12.max.length == 6)) {
                                         let findWiningSenario = await winingSenario.findOne();
                                         if (findWiningSenario) {
                                                 let update = await winingSenario.findByIdAndUpdate({ _id: findWiningSenario._id }, { $set: { max: result12.max, med: result12.med, low: result12.low } }, { new: true })
@@ -550,6 +551,12 @@ exports.raceStart = async (req, res) => {
                                                         winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
+                                                let findRaceStart = await raceStart.findOne();
+                                                if (findRaceStart) {
+                                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: true } }, { new: true });
+                                                } else {
+                                                        await raceStart.create({ raceStart: true });
+                                                }
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
                                                         { path: 'car1.car', select: 'name image victory  odds' },
                                                         { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -685,6 +692,12 @@ exports.raceStart = async (req, res) => {
                                                         winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
+                                                let findRaceStart = await raceStart.findOne();
+                                                if (findRaceStart) {
+                                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: true } }, { new: true });
+                                                } else {
+                                                        await raceStart.create({ raceStart: true });
+                                                }
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
                                                         { path: 'car1.car', select: 'name image victory  odds' },
                                                         { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -820,6 +833,12 @@ exports.raceStart = async (req, res) => {
                                                         winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
+                                                let findRaceStart = await raceStart.findOne();
+                                                if (findRaceStart) {
+                                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: true } }, { new: true });
+                                                } else {
+                                                        await raceStart.create({ raceStart: true });
+                                                }
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
                                                         { path: 'car1.car', select: 'name image victory  odds' },
                                                         { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -959,6 +978,12 @@ exports.raceStart = async (req, res) => {
                                                         winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
+                                                let findRaceStart = await raceStart.findOne();
+                                                if (findRaceStart) {
+                                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: true } }, { new: true });
+                                                } else {
+                                                        await raceStart.create({ raceStart: true });
+                                                }
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
                                                         { path: 'car1.car', select: 'name image victory  odds' },
                                                         { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -1094,6 +1119,12 @@ exports.raceStart = async (req, res) => {
                                                         winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
+                                                let findRaceStart = await raceStart.findOne();
+                                                if (findRaceStart) {
+                                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: true } }, { new: true });
+                                                } else {
+                                                        await raceStart.create({ raceStart: true });
+                                                }
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
                                                         { path: 'car1.car', select: 'name image victory  odds' },
                                                         { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -1229,6 +1260,12 @@ exports.raceStart = async (req, res) => {
                                                         winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
+                                                let findRaceStart = await raceStart.findOne();
+                                                if (findRaceStart) {
+                                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: true } }, { new: true });
+                                                } else {
+                                                        await raceStart.create({ raceStart: true });
+                                                }
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
                                                         { path: 'car1.car', select: 'name image victory  odds' },
                                                         { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -1368,6 +1405,12 @@ exports.raceStart = async (req, res) => {
                                                         winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
+                                                let findRaceStart = await raceStart.findOne();
+                                                if (findRaceStart) {
+                                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: true } }, { new: true });
+                                                } else {
+                                                        await raceStart.create({ raceStart: true });
+                                                }
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
                                                         { path: 'car1.car', select: 'name image victory  odds' },
                                                         { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -1503,6 +1546,12 @@ exports.raceStart = async (req, res) => {
                                                         winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
+                                                let findRaceStart = await raceStart.findOne();
+                                                if (findRaceStart) {
+                                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: true } }, { new: true });
+                                                } else {
+                                                        await raceStart.create({ raceStart: true });
+                                                }
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
                                                         { path: 'car1.car', select: 'name image victory  odds' },
                                                         { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -1638,6 +1687,12 @@ exports.raceStart = async (req, res) => {
                                                         winCar: winCar
                                                 }
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { $set: obj }, { new: true });
+                                                let findRaceStart = await raceStart.findOne();
+                                                if (findRaceStart) {
+                                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: true } }, { new: true });
+                                                } else {
+                                                        await raceStart.create({ raceStart: true });
+                                                }
                                                 let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
                                                         { path: 'car1.car', select: 'name image victory  odds' },
                                                         { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -1657,7 +1712,7 @@ exports.raceStart = async (req, res) => {
                                 }
                                 return;
                                 if (user.raceNo == 10) {
-                                    
+
                                 }
                                 if ((user.raceNo == 1) || (user.raceNo == 3) || (user.raceNo == 5) || (user.raceNo == 7) || (user.raceNo == 8) || (user.raceNo == 9)) {
                                         if (maxBetAmount === user.car1BetAmount) {
@@ -2638,9 +2693,27 @@ exports.raceCompleted = async (req, res) => {
                                         }
                                 }
                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
+                                let findRaceStart = await raceStart.findOne();
+                                if (findRaceStart) {
+                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false } }, { new: true });
+                                } else {
+                                        await raceStart.create({ raceStart: false });
+                                }
                                 return res.status(200).send({ status: 200, message: "Race complete", data: update, });
                         }
-
+                }
+        } catch (error) {
+                console.error(error);
+                return res.status(500).json({ message: "Server error" });
+        }
+};
+exports.getRaceStart = async (req, res) => {
+        try {
+                let findRaceStart = await raceStart.findOne();
+                if (findRaceStart) {
+                        return res.status(200).send({ status: 200, message: "Race Start", data: findRaceStart, });
+                } else {
+                        return res.status(404).send({ status: 404, message: "Race Start", data: {}, });
                 }
         } catch (error) {
                 console.error(error);
