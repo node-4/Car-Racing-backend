@@ -3254,11 +3254,11 @@ const createRace = async () => {
                                 ]);
                                 let findRaceStart = await raceStart.findOne();
                                 if (findRaceStart) {
-                                        console.log("raceStartTime",new Date(Date.now() + 40 * 1000),"raceCompleteTime", new Date(Date.now() + 60 * 1000) );
+                                        console.log("raceStartTime", new Date(Date.now() + 40 * 1000), "raceCompleteTime", new Date(Date.now() + 60 * 1000));
 
-                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000),raceCompleteTime: new Date(Date.now() + 60 * 1000) } }, { new: true });
+                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000), raceCompleteTime: new Date(Date.now() + 60 * 1000) } }, { new: true });
                                 } else {
-                                        await raceStart.create({ raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000),raceCompleteTime: new Date(Date.now() + 60 * 1000) });
+                                        await raceStart.create({ raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000), raceCompleteTime: new Date(Date.now() + 60 * 1000) });
                                 }
                                 if (car6) {
                                         console.log('Race created successfully.', car6);
@@ -4635,6 +4635,14 @@ const raceCompleted = async () => {
                                                                 console.log(findBet[i]);
                                                         }
                                                         let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
+                                                        let findRaceStart = await raceStart.findOne();
+                                                        if (findRaceStart) {
+                                                                console.log("raceStartTime", new Date(Date.now() + 40 * 1000), "raceCompleteTime", new Date(Date.now() + 60 * 1000));
+
+                                                                await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false } }, { new: true });
+                                                        } else {
+                                                                await raceStart.create({ raceStart: false });
+                                                        }
                                                         console.log({ status: 200, message: "Race complete", data: update, });
                                                 }
                                                 if (user.win == "med") {
@@ -4675,6 +4683,14 @@ const raceCompleted = async () => {
                                                                 console.log(findBet[i]);
                                                         }
                                                         let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
+                                                        let findRaceStart = await raceStart.findOne();
+                                                        if (findRaceStart) {
+                                                                console.log("raceStartTime", new Date(Date.now() + 40 * 1000), "raceCompleteTime", new Date(Date.now() + 60 * 1000));
+
+                                                                await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false } }, { new: true });
+                                                        } else {
+                                                                await raceStart.create({ raceStart: false });
+                                                        }
                                                         console.log({ status: 200, message: "Race complete", data: update, });
                                                 }
                                                 if (user.win == "low") {
@@ -4714,10 +4730,22 @@ const raceCompleted = async () => {
                                                                 }
                                                         }
                                                         let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
+                                                        let findRaceStart = await raceStart.findOne();
+                                                        if (findRaceStart) {
+                                                                await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false } }, { new: true });
+                                                        } else {
+                                                                await raceStart.create({ raceStart: false });
+                                                        }
                                                         console.log({ status: 200, message: "Race complete", data: update, });
                                                 }
                                         } else {
                                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
+                                                let findRaceStart = await raceStart.findOne();
+                                                if (findRaceStart) {
+                                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false } }, { new: true });
+                                                } else {
+                                                        await raceStart.create({ raceStart: false });
+                                                }
                                                 console.log({ status: 200, message: "Race complete", data: update, });
                                         }
                                 }
