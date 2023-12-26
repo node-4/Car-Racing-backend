@@ -2614,6 +2614,12 @@ exports.raceCompleted = async (req, res) => {
                                         console.log(findBet[i]);
                                 }
                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
+                                let findRaceStart = await raceStart.findOne();
+                                if (findRaceStart) {
+                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false } }, { new: true });
+                                } else {
+                                        await raceStart.create({ raceStart: false });
+                                }
                                 return res.status(200).send({ status: 200, message: "Race complete", data: update, });
                         }
                         if (user.win == "med") {
@@ -2654,6 +2660,12 @@ exports.raceCompleted = async (req, res) => {
                                         console.log(findBet[i]);
                                 }
                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
+                                let findRaceStart = await raceStart.findOne();
+                                if (findRaceStart) {
+                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false } }, { new: true });
+                                } else {
+                                        await raceStart.create({ raceStart: false });
+                                }
                                 return res.status(200).send({ status: 200, message: "Race complete", data: update, });
                         }
                         if (user.win == "low") {
