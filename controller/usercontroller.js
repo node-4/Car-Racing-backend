@@ -2616,9 +2616,9 @@ exports.raceCompleted = async (req, res) => {
                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
                                 let findRaceStart = await raceStart.findOne();
                                 if (findRaceStart) {
-                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false } }, { new: true });
+                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000) } }, { new: true });
                                 } else {
-                                        await raceStart.create({ raceStart: false });
+                                        await raceStart.create({ raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000) });
                                 }
                                 return res.status(200).send({ status: 200, message: "Race complete", data: update, });
                         }
@@ -2662,9 +2662,9 @@ exports.raceCompleted = async (req, res) => {
                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
                                 let findRaceStart = await raceStart.findOne();
                                 if (findRaceStart) {
-                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false } }, { new: true });
+                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000) } }, { new: true });
                                 } else {
-                                        await raceStart.create({ raceStart: false });
+                                        await raceStart.create({ raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000) });
                                 }
                                 return res.status(200).send({ status: 200, message: "Race complete", data: update, });
                         }
@@ -2707,9 +2707,9 @@ exports.raceCompleted = async (req, res) => {
                                 let update = await Race.findByIdAndUpdate({ _id: user._id }, { status: "completed" }, { new: true })
                                 let findRaceStart = await raceStart.findOne();
                                 if (findRaceStart) {
-                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false } }, { new: true });
+                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000) } }, { new: true });
                                 } else {
-                                        await raceStart.create({ raceStart: false });
+                                        await raceStart.create({ raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000) });
                                 }
                                 return res.status(200).send({ status: 200, message: "Race complete", data: update, });
                         }

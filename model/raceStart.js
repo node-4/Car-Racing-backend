@@ -6,6 +6,9 @@ var userSchema = new schema(
                         type: Boolean,
                         default: false
                 },
+                raceStartTime: {
+                        type: Date,
+                },
         },
         { timestamps: true }
 );
