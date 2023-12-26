@@ -3270,7 +3270,7 @@ const createRace = async () => {
         }
 };
 createRace();
-const intervalId = setInterval(createRace, 30000);
+const intervalId = setInterval(createRace, 60000);
 const raceStarted = async () => {
         try {
                 let findRaceStart1 = await raceStart.findOne();
@@ -4584,7 +4584,7 @@ const raceStarted = async () => {
                 console.error('Error creating race:', error);
         }
 };
-const intervalId1 = setInterval(raceStarted, 20000);
+const intervalId1 = setInterval(raceStarted, 40000);
 raceStarted();
 const raceCompleted = async () => {
         try {
@@ -4755,5 +4755,5 @@ const raceCompleted = async () => {
                 console.log({ status: 500, message: "Server error", data: error, });
         }
 };
-const intervalId2 = setInterval(raceCompleted, 10000);
+const intervalId2 = setInterval(raceCompleted, 20000);
 raceCompleted();
