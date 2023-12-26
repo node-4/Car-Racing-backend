@@ -3254,9 +3254,11 @@ const createRace = async () => {
                                 ]);
                                 let findRaceStart = await raceStart.findOne();
                                 if (findRaceStart) {
-                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000),raceCompleteTime: new Date(Date.now() + 55 * 1000) } }, { new: true });
+                                        console.log("raceStartTime",new Date(Date.now() + 40 * 1000),"raceCompleteTime", new Date(Date.now() + 60 * 1000) );
+
+                                        await raceStart.findByIdAndUpdate({ _id: findRaceStart._id }, { $set: { raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000),raceCompleteTime: new Date(Date.now() + 60 * 1000) } }, { new: true });
                                 } else {
-                                        await raceStart.create({ raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000),raceCompleteTime: new Date(Date.now() + 55 * 1000) });
+                                        await raceStart.create({ raceStart: false, raceStartTime: new Date(Date.now() + 40 * 1000),raceCompleteTime: new Date(Date.now() + 60 * 1000) });
                                 }
                                 if (car6) {
                                         console.log('Race created successfully.', car6);
