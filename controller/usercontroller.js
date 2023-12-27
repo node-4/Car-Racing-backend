@@ -2555,13 +2555,26 @@ exports.raceStart = async (req, res) => {
                 return res.status(500).json({ message: "Server error" });
         }
 };
-exports.getRaceStart = async (req, res) => {
+exports.getRaceStarted = async (req, res) => {
         try {
                 const user = await Race.findOne({ status: 'started' }).populate([{ path: 'car1.car', select: 'name image victory  odds' }, { path: 'car2.car', select: 'name image victory  odds' }, { path: 'car3.car', select: 'name image victory  odds' },]);
                 if (!user) {
                         return res.status(404).send({ status: 404, message: "Race not found", data: {} });
                 } else {
                         return res.status(200).send({ status: 200, message: "started race", data: user });
+                }
+        } catch (error) {
+                console.error(error);
+                return res.status(500).json({ message: "Server error" });
+        }
+};
+exports.getRaceStart = async (req, res) => {
+        try {
+                let findRaceStart = await raceStart.findOne();
+                if (findRaceStart) {
+                        return res.status(200).send({ status: 200, message: "Race Start", data: findRaceStart, });
+                } else {
+                        return res.status(404).send({ status: 404, message: "Race Start", data: {}, });
                 }
         } catch (error) {
                 console.error(error);
