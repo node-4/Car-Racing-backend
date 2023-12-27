@@ -2557,7 +2557,7 @@ exports.raceStart = async (req, res) => {
 };
 exports.getRaceStarted = async (req, res) => {
         try {
-                const user = await Race.findOne({ status: 'started' }).populate([{ path: 'car1.car', select: 'name image victory  odds' }, { path: 'car2.car', select: 'name image victory  odds' }, { path: 'car3.car', select: 'name image victory  odds' },]);
+                const user = await Race.findOne({ status: 'started' }).populate([{ path: 'car1.car', select: 'name image victory odds' }, { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.car', select: 'name image victory odds' }, { path: 'car2.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.car', select: 'name image victory odds' }, { path: 'car3.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },]);
                 if (!user) {
                         return res.status(404).send({ status: 404, message: "Race not found", data: {} });
                 } else {
@@ -2583,7 +2583,7 @@ exports.getRaceStart = async (req, res) => {
 };
 exports.getRacePending = async (req, res) => {
         try {
-                const user = await Race.findOne({ status: 'pending' }).populate([{ path: 'car1.car', select: 'name image victory  odds' }, { path: 'car2.car', select: 'name image victory  odds' }, { path: 'car3.car', select: 'name image victory  odds' },]);
+                const user = await Race.findOne({ status: 'pending' }).populate([{ path: 'car1.car', select: 'name image victory odds' }, { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car1.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.car', select: 'name image victory odds' }, { path: 'car2.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car2.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.car', select: 'name image victory odds' }, { path: 'car3.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } }, { path: 'car3.track3Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },]);
                 if (!user) {
                         return res.status(404).send({ status: 404, message: "Race not found", data: {} });
                 } else {
