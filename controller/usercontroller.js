@@ -2574,7 +2574,7 @@ exports.getRacePending = async (req, res) => {
                 if (!user) {
                         return res.status(404).send({ status: 404, message: "Race not found", data: {} });
                 } else {
-                        return res.status(200).send({ status: 200, message: "started race", data: user });
+                        return res.status(200).send({ status: 200, message: "pending race", data: user });
                 }
         } catch (error) {
                 console.error(error);
@@ -2739,19 +2739,6 @@ exports.raceCompleted = async (req, res) => {
                                 }
                                 return res.status(200).send({ status: 200, message: "Race complete", data: update, });
                         }
-                }
-        } catch (error) {
-                console.error(error);
-                return res.status(500).json({ message: "Server error" });
-        }
-};
-exports.getRaceStart = async (req, res) => {
-        try {
-                let findRaceStart = await raceStart.findOne();
-                if (findRaceStart) {
-                        return res.status(200).send({ status: 200, message: "Race Start", data: findRaceStart, });
-                } else {
-                        return res.status(404).send({ status: 404, message: "Race Start", data: {}, });
                 }
         } catch (error) {
                 console.error(error);
