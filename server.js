@@ -503,7 +503,7 @@ const raceStarted = async () => {
                                                         } else {
                                                                 await raceStart.create({ raceStart: true, });
                                                         }
-                                                        let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
+                                                        let findOne1 = await Race.findOne({ _id: user._id }).populate([
                                                                 { path: 'car1.car', select: 'name image victory  odds' },
                                                                 { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
                                                                 { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -644,7 +644,7 @@ const raceStarted = async () => {
                                                         } else {
                                                                 await raceStart.create({ raceStart: true, });
                                                         }
-                                                        let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
+                                                        let findOne1 = await Race.findOne({ _id: user._id }).populate([
                                                                 { path: 'car1.car', select: 'name image victory  odds' },
                                                                 { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
                                                                 { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -930,7 +930,7 @@ const raceStarted = async () => {
                                                         } else {
                                                                 await raceStart.create({ raceStart: true, });
                                                         }
-                                                        let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
+                                                        let findOne1 = await Race.findOne({ _id: user._id }).populate([
                                                                 { path: 'car1.car', select: 'name image victory  odds' },
                                                                 { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
                                                                 { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -1071,7 +1071,7 @@ const raceStarted = async () => {
                                                         } else {
                                                                 await raceStart.create({ raceStart: true, });
                                                         }
-                                                        let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
+                                                        let findOne1 = await Race.findOne({ _id: user._id }).populate([
                                                                 { path: 'car1.car', select: 'name image victory  odds' },
                                                                 { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
                                                                 { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -1216,7 +1216,7 @@ const raceStarted = async () => {
                                                         } else {
                                                                 await raceStart.create({ raceStart: true, });
                                                         }
-                                                        let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
+                                                        let findOne1 = await Race.findOne({ _id: user._id }).populate([
                                                                 { path: 'car1.car', select: 'name image victory  odds' },
                                                                 { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
                                                                 { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -1357,7 +1357,7 @@ const raceStarted = async () => {
                                                         } else {
                                                                 await raceStart.create({ raceStart: true, });
                                                         }
-                                                        let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
+                                                        let findOne1 = await Race.findOne({ _id: user._id }).populate([
                                                                 { path: 'car1.car', select: 'name image victory  odds' },
                                                                 { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
                                                                 { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
@@ -1498,7 +1498,7 @@ const raceStarted = async () => {
                                                         } else {
                                                                 await raceStart.create({ raceStart: true, });
                                                         }
-                                                        let findOne1 = await Race.findOne({ _id: req.params.id }).populate([
+                                                        let findOne1 = await Race.findOne({ _id: user._id }).populate([
                                                                 { path: 'car1.car', select: 'name image victory  odds' },
                                                                 { path: 'car1.track1Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
                                                                 { path: 'car1.track2Id', select: 'speed trackId', populate: { path: 'trackId', select: 'name image' } },
